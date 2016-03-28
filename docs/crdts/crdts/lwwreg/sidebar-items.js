@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["LWWReg","`LWWReg` is a simple CRDT that contains an arbitrary value along with an `Ord` that tracks causality. It is the responsibility of the user to guarantee that the source of the causal element is monotonic. Don't use timestamps unless you are comfortable with divergence."]]});
