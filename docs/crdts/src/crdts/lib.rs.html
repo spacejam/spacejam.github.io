@@ -74,6 +74,7 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
+<span id="34">34</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `crdts` is a library of thoroughly-tested, serializable CRDT&#39;s</span>
 <span class='doccomment'>//! ported from the riak_dt library to rust.</span>
@@ -82,6 +83,7 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>vclock</span>::<span class='ident'>VClock</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>orswot</span>::<span class='ident'>Orswot</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>lwwreg</span>::<span class='ident'>LWWReg</span>;
 
 <span class='doccomment'>/// `lwwreg` contains the last-write-wins register.</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>lwwreg</span>;
