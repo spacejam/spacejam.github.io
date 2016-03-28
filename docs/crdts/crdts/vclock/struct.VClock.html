@@ -46,9 +46,9 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-84' class='srclink' href='../../src/crdts/vclock.rs.html#36-38' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-85' class='srclink' href='../../src/crdts/vclock.rs.html#36-39' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct VClock&lt;A: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; {
-    // some fields omitted
+    pub dots: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;A, <a class='type' href='../../crdts/vclock/type.Counter.html' title='crdts::vclock::Counter'>Counter</a>&gt;,
 }</pre><div class='docblock'><p>A <code>VClock</code> is a standard vector clock.
 It contains a set of &quot;actors&quot; and associated counters.
 When a particular actor witnesses a mutation, their associated
@@ -58,7 +58,10 @@ container for application data. <code>VClock</code> just tracks causality.
 It can tell you if something causally descends something else,
 or if different replicas are &quot;concurrent&quot; (were mutated in
 isolation, and need to be resolved externally).</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; <a class='struct' href='../../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>&lt;A&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>&lt;A&gt;</code></h4>
+</div><h2 class='fields'>Fields</h2>
+<table><tr class='stab '>
+                                  <td id='structfield.dots'><code>dots</code></td><td><div class='docblock'><p>dots is the mapping from actors to their associated counters</p>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;A: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; <a class='struct' href='../../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>&lt;A&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>&lt;A&gt;</code></h4>
 <div class='docblock'><p>Returns a new <code>VClock</code> instance.</p>
 </div><h4 id='method.witness' class='method'><code>fn <a href='#method.witness' class='fnname'>witness</a>(&amp;mut self, actor: A, counter: <a class='type' href='../../crdts/vclock/type.Counter.html' title='crdts::vclock::Counter'>Counter</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
 <div class='docblock'><p>For a particular actor, possibly store a new counter

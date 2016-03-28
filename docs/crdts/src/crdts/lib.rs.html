@@ -75,6 +75,9 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `crdts` is a library of thoroughly-tested, serializable CRDT&#39;s</span>
 <span class='doccomment'>//! ported from the riak_dt library to rust.</span>
@@ -84,6 +87,7 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>vclock</span>::<span class='ident'>VClock</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>orswot</span>::<span class='ident'>Orswot</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>lwwreg</span>::<span class='ident'>LWWReg</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>gcounter</span>::<span class='ident'>GCounter</span>;
 
 <span class='doccomment'>/// `lwwreg` contains the last-write-wins register.</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>lwwreg</span>;
@@ -91,6 +95,8 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>vclock</span>;
 <span class='doccomment'>/// `orswot` contains the addition-biased or-set without tombstone.</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>orswot</span>;
+<span class='doccomment'>/// `gcounter` contains the grow-only counter</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>gcounter</span>;
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bincode</span>;
