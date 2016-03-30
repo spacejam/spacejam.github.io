@@ -408,6 +408,7 @@
 <span id="365">365</span>
 <span id="366">366</span>
 <span id="367">367</span>
+<span id="368">368</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! The `vclock` crate provides a generic vector clock implementation.</span>
 <span class='doccomment'>//!</span>
@@ -416,8 +417,8 @@
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! use crdts::VClock;</span>
 <span class='doccomment'>//! let (mut a, mut b) = (VClock::new(), VClock::new());</span>
-<span class='doccomment'>//! a.witness(&quot;A&quot;, 2);</span>
-<span class='doccomment'>//! b.witness(&quot;A&quot;, 1);</span>
+<span class='doccomment'>//! a.witness(&quot;A&quot;.to_string(), 2);</span>
+<span class='doccomment'>//! b.witness(&quot;A&quot;.to_string(), 1);</span>
 <span class='doccomment'>//! assert!(a &gt; b);</span>
 <span class='doccomment'>//! ```</span>
 
@@ -426,6 +427,7 @@
 
 <span class='kw'>use</span> <span class='ident'>quickcheck</span>::{<span class='ident'>Arbitrary</span>, <span class='ident'>Gen</span>};
 <span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Encodable</span>, <span class='ident'>Decodable</span>};
 
 <span class='doccomment'>/// A counter is used to track causality at a particular actor.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Counter</span> <span class='op'>=</span> <span class='ident'>u64</span>;
@@ -443,13 +445,13 @@
 <span class='doccomment'>/// It can tell you if something causally descends something else,</span>
 <span class='doccomment'>/// or if different replicas are &quot;concurrent&quot; (were mutated in</span>
 <span class='doccomment'>/// isolation, and need to be resolved externally).</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Ord</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Ord</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// dots is the mapping from actors to their associated counters</span>
     <span class='kw'>pub</span> <span class='ident'>dots</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Counter</span><span class='op'>&gt;</span>
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span><span class='op'>&gt;</span> <span class='ident'>PartialOrd</span> <span class='kw'>for</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> <span class='ident'>PartialOrd</span> <span class='kw'>for</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>partial_cmp</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Ordering</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span> <span class='op'>==</span> <span class='ident'>other</span> {
             <span class='prelude-val'>Some</span>(<span class='ident'>Ordering</span>::<span class='ident'>Equal</span>)
@@ -463,7 +465,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span><span class='op'>&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Returns a new `VClock` instance.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='ident'>VClock</span> {
@@ -479,9 +481,9 @@
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// use crdts::VClock;</span>
     <span class='doccomment'>/// let (mut a, mut b) = (VClock::new(), VClock::new());</span>
-    <span class='doccomment'>/// a.witness(&quot;A&quot;, 2);</span>
-    <span class='doccomment'>/// a.witness(&quot;A&quot;, 0); // ignored because 2 dominates 0</span>
-    <span class='doccomment'>/// b.witness(&quot;A&quot;, 1);</span>
+    <span class='doccomment'>/// a.witness(&quot;A&quot;.to_string(), 2);</span>
+    <span class='doccomment'>/// a.witness(&quot;A&quot;.to_string(), 0); // ignored because 2 dominates 0</span>
+    <span class='doccomment'>/// b.witness(&quot;A&quot;.to_string(), 1);</span>
     <span class='doccomment'>/// assert!(a &gt; b);</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>///</span>
@@ -501,10 +503,10 @@
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// use crdts::VClock;</span>
     <span class='doccomment'>/// let (mut a, mut b) = (VClock::new(), VClock::new());</span>
-    <span class='doccomment'>/// a.increment(&quot;A&quot;);</span>
-    <span class='doccomment'>/// a.increment(&quot;A&quot;);</span>
-    <span class='doccomment'>/// a.witness(&quot;A&quot;, 0); // ignored because 2 dominates 0</span>
-    <span class='doccomment'>/// b.increment(&quot;A&quot;);</span>
+    <span class='doccomment'>/// a.increment(&quot;A&quot;.to_string());</span>
+    <span class='doccomment'>/// a.increment(&quot;A&quot;.to_string());</span>
+    <span class='doccomment'>/// a.witness(&quot;A&quot;.to_string(), 0); // ignored because 2 dominates 0</span>
+    <span class='doccomment'>/// b.increment(&quot;A&quot;.to_string());</span>
     <span class='doccomment'>/// assert!(a &gt; b);</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>///</span>
@@ -524,10 +526,10 @@
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// use crdts::VClock;</span>
     <span class='doccomment'>/// let (mut a, mut b, mut c) = (VClock::new(), VClock::new(), VClock::new());</span>
-    <span class='doccomment'>/// a.increment(&quot;A&quot;);</span>
-    <span class='doccomment'>/// b.increment(&quot;B&quot;);</span>
-    <span class='doccomment'>/// c.increment(&quot;A&quot;);</span>
-    <span class='doccomment'>/// c.increment(&quot;B&quot;);</span>
+    <span class='doccomment'>/// a.increment(&quot;A&quot;.to_string());</span>
+    <span class='doccomment'>/// b.increment(&quot;B&quot;.to_string());</span>
+    <span class='doccomment'>/// c.increment(&quot;A&quot;.to_string());</span>
+    <span class='doccomment'>/// c.increment(&quot;B&quot;.to_string());</span>
     <span class='doccomment'>/// a.merge(b);</span>
     <span class='doccomment'>/// assert_eq!(a, c);</span>
     <span class='doccomment'>/// ```</span>
@@ -556,8 +558,8 @@
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// use crdts::VClock;</span>
     <span class='doccomment'>/// let (mut a, mut b) = (VClock::new(), VClock::new());</span>
-    <span class='doccomment'>/// a.increment(&quot;A&quot;);</span>
-    <span class='doccomment'>/// b.increment(&quot;B&quot;);</span>
+    <span class='doccomment'>/// a.increment(&quot;A&quot;.to_string());</span>
+    <span class='doccomment'>/// b.increment(&quot;B&quot;.to_string());</span>
     <span class='doccomment'>/// assert!(a.concurrent(&amp;b));</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>concurrent</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
@@ -575,7 +577,7 @@
     }
 
     <span class='doccomment'>/// Return the dots that self dominates compared to another clock.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dominating_dots</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dots</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Counter</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Counter</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dominating_dots</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dots</span>: <span class='kw-2'>&amp;</span><span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Counter</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>A</span>, <span class='ident'>Counter</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> (<span class='ident'>actor</span>, <span class='ident'>counter</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>dots</span>.<span class='ident'>iter</span>() {
             <span class='kw'>let</span> <span class='ident'>other</span> <span class='op'>=</span> <span class='ident'>dots</span>.<span class='ident'>get</span>(<span class='ident'>actor</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>c</span>).<span class='ident'>unwrap_or</span>(<span class='number'>0</span>);
@@ -594,24 +596,24 @@
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// use crdts::VClock;</span>
     <span class='doccomment'>/// let (mut a, mut b) = (VClock::new(), VClock::new());</span>
-    <span class='doccomment'>/// a.witness(&quot;A&quot;, 3);</span>
-    <span class='doccomment'>/// a.witness(&quot;B&quot;, 2);</span>
-    <span class='doccomment'>/// a.witness(&quot;D&quot;, 14);</span>
-    <span class='doccomment'>/// a.witness(&quot;G&quot;, 22);</span>
+    <span class='doccomment'>/// a.witness(&quot;A&quot;.to_string(), 3);</span>
+    <span class='doccomment'>/// a.witness(&quot;B&quot;.to_string(), 2);</span>
+    <span class='doccomment'>/// a.witness(&quot;D&quot;.to_string(), 14);</span>
+    <span class='doccomment'>/// a.witness(&quot;G&quot;.to_string(), 22);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// b.witness(&quot;A&quot;, 4);</span>
-    <span class='doccomment'>/// b.witness(&quot;B&quot;, 1);</span>
-    <span class='doccomment'>/// b.witness(&quot;C&quot;, 1);</span>
-    <span class='doccomment'>/// b.witness(&quot;D&quot;, 14);</span>
-    <span class='doccomment'>/// b.witness(&quot;E&quot;, 5);</span>
-    <span class='doccomment'>/// b.witness(&quot;F&quot;, 2);</span>
+    <span class='doccomment'>/// b.witness(&quot;A&quot;.to_string(), 4);</span>
+    <span class='doccomment'>/// b.witness(&quot;B&quot;.to_string(), 1);</span>
+    <span class='doccomment'>/// b.witness(&quot;C&quot;.to_string(), 1);</span>
+    <span class='doccomment'>/// b.witness(&quot;D&quot;.to_string(), 14);</span>
+    <span class='doccomment'>/// b.witness(&quot;E&quot;.to_string(), 5);</span>
+    <span class='doccomment'>/// b.witness(&quot;F&quot;.to_string(), 2);</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let dom = a.dominating_vclock(b);</span>
-    <span class='doccomment'>/// assert_eq!(dom.get(&amp;&quot;B&quot;), Some(2));</span>
-    <span class='doccomment'>/// assert_eq!(dom.get(&amp;&quot;G&quot;), Some(22));</span>
+    <span class='doccomment'>/// let dom = a.dominating_vclock(&amp;b);</span>
+    <span class='doccomment'>/// assert_eq!(dom.get(&amp;&quot;B&quot;.to_string()), Some(2));</span>
+    <span class='doccomment'>/// assert_eq!(dom.get(&amp;&quot;G&quot;.to_string()), Some(22));</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dominating_vclock</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>dots</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>dominating_dots</span>(<span class='ident'>other</span>.<span class='ident'>dots</span>);
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dominating_vclock</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>dots</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>dominating_dots</span>(<span class='kw-2'>&amp;</span><span class='ident'>other</span>.<span class='ident'>dots</span>);
         <span class='ident'>VClock</span> {
             <span class='ident'>dots</span>: <span class='ident'>dots</span>
         }
@@ -619,7 +621,7 @@
 
     <span class='doccomment'>/// Returns the common elements (same actor and counter)</span>
     <span class='doccomment'>/// for two `VClock` instances.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>intersection</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>intersection</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dots</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> (<span class='ident'>actor</span>, <span class='ident'>counter</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>dots</span>.<span class='ident'>iter</span>() {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>other_counter</span>) <span class='op'>=</span> <span class='ident'>other</span>.<span class='ident'>dots</span>.<span class='ident'>get</span>(<span class='ident'>actor</span>) {
@@ -723,10 +725,10 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>VClock</span>::<span class='op'>&lt;</span><span class='ident'>i8</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(), <span class='ident'>VClock</span>::<span class='ident'>new</span>());
 
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>a</span>, <span class='kw-2'>mut</span> <span class='ident'>b</span>) <span class='op'>=</span> (<span class='ident'>VClock</span>::<span class='ident'>new</span>(), <span class='ident'>VClock</span>::<span class='ident'>new</span>());
-        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>1</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>2</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>0</span>).<span class='ident'>is_err</span>());
-        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>1</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>1</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>2</span>).<span class='ident'>unwrap</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>0</span>).<span class='ident'>is_err</span>());
+        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>1</span>).<span class='ident'>unwrap</span>();
 
         <span class='comment'>// a {A:2}</span>
         <span class='comment'>// b {A:1}</span>
@@ -735,7 +737,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
 
-        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>3</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>3</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// a {A:2}</span>
         <span class='comment'>// b {A:3}</span>
         <span class='comment'>// expect: b dominates</span>
@@ -743,7 +745,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
 
-        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>, <span class='number'>1</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>1</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// a {A:2, B:1}</span>
         <span class='comment'>// b {A:3}</span>
         <span class='comment'>// expect: concurrent</span>
@@ -751,7 +753,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>a</span> <span class='op'>&gt;</span> <span class='ident'>b</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span>(<span class='ident'>b</span> <span class='op'>&gt;</span> <span class='ident'>a</span>));
 
-        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>, <span class='number'>3</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>3</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// a {A:3, B:1}</span>
         <span class='comment'>// b {A:3}</span>
         <span class='comment'>// expect: a dominates</span>
@@ -759,7 +761,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>b</span> <span class='op'>&lt;</span> <span class='ident'>a</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
 
-        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>, <span class='number'>2</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>b</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>2</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// a {A:3, B:1}</span>
         <span class='comment'>// b {A:3, B:2}</span>
         <span class='comment'>// expect: b dominates</span>
@@ -767,7 +769,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>!=</span> <span class='ident'>b</span>);
 
-        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>, <span class='number'>2</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;B&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>2</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// a {A:3, B:2}</span>
         <span class='comment'>// b {A:3, B:2}</span>
         <span class='comment'>// expect: equal</span>

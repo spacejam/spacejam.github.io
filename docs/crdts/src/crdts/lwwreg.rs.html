@@ -90,21 +90,26 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Encodable</span>, <span class='ident'>Decodable</span>};
+
 <span class='doccomment'>/// `LWWReg` is a simple CRDT that contains an arbitrary value</span>
 <span class='doccomment'>/// along with an `Ord` that tracks causality. It is the responsibility</span>
 <span class='doccomment'>/// of the user to guarantee that the source of the causal element</span>
 <span class='doccomment'>/// is monotonic. Don&#39;t use timestamps unless you are comfortable</span>
 <span class='doccomment'>/// with divergence.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>LWWReg</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span>, <span class='ident'>A</span>: <span class='ident'>Ord</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>LWWReg</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span>, <span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// `value` is the opaque element contained within this CRDT</span>
     <span class='kw'>pub</span> <span class='ident'>value</span>: <span class='ident'>T</span>,
     <span class='doccomment'>/// `dot` should be a monotonic value associated with this value</span>
     <span class='kw'>pub</span> <span class='ident'>dot</span>: <span class='ident'>A</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span>, <span class='ident'>A</span>: <span class='ident'>Ord</span><span class='op'>&gt;</span> <span class='ident'>LWWReg</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span>, <span class='ident'>A</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> <span class='ident'>LWWReg</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Combines two `LWWReg` instances according to the dot that</span>
     <span class='doccomment'>/// tracks causality. Panics if the dot is identical but the</span>
     <span class='doccomment'>/// contained element is different. If you would prefer divergence,</span>
@@ -119,7 +124,8 @@
     <span class='doccomment'>/// use crdts::LWWReg;</span>
     <span class='doccomment'>/// let mut l1 = LWWReg { value: 1, dot: 2 };</span>
     <span class='doccomment'>/// let l2 = LWWReg { value: 3, dot: 2 };</span>
-    <span class='doccomment'>/// l1.merge(l2);</span>
+    <span class='doccomment'>/// // panics</span>
+    <span class='doccomment'>/// // l1.merge(l2);</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>merge</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>LWWReg</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>A</span><span class='op'>&gt;</span>) {
         <span class='kw'>if</span> <span class='ident'>other</span>.<span class='ident'>dot</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>dot</span> {
