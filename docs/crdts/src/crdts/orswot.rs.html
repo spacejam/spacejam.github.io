@@ -634,7 +634,7 @@
 
 <span class='doccomment'>/// `Orswot` is an add-biased or-set without tombstones ported from</span>
 <span class='doccomment'>/// the riak_dt CRDT library.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Ord</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Orswot</span><span class='op'>&lt;</span><span class='ident'>Member</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span>,
                   <span class='ident'>Actor</span>: <span class='ident'>Ord</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span><span class='op'>&gt;</span> {
     <span class='ident'>clock</span>: <span class='ident'>VClock</span><span class='op'>&lt;</span><span class='ident'>Actor</span><span class='op'>&gt;</span>,
