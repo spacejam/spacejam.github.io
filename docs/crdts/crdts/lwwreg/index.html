@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,26 +44,24 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>crdts</a>::<wbr><a class='mod' href=''>lwwreg</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-8' class='srclink' href='../../src/crdts/lwwreg.rs.html#1-52' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-9' class='srclink' href='../../src/crdts/src/lwwreg.rs.html#1-52' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>lwwreg</code> contains the last-write-wins register.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.LWWReg.html'
-                               title='crdts::lwwreg::LWWReg'>LWWReg</a></td>
-                        <td class='docblock short'>
-                             <p><code>LWWReg</code> is a simple CRDT that contains an arbitrary value
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.LWWReg.html'
+                                  title='crdts::lwwreg::LWWReg'>LWWReg</a></td>
+                           <td class='docblock short'>
+                                <p><code>LWWReg</code> is a simple CRDT that contains an arbitrary value
 along with an <code>Ord</code> that tracks causality. It is the responsibility
 of the user to guarantee that the source of the causal element
 is monotonic. Don&#39;t use timestamps unless you are comfortable
 with divergence.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -85,6 +84,8 @@ with divergence.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -105,7 +106,7 @@ with divergence.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

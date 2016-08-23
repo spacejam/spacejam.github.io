@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,73 +44,68 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>crdts</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/crdts/lib.rs.html#1-60' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/crdts/src/lib.rs.html#1-63' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>crdts</code> is a library of thoroughly-tested, serializable CRDT&#39;s
 ported from the riak_dt library to rust.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use vclock::<a class='struct' href='../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>;</code></td></tr><tr><td><code>pub use orswot::<a class='struct' href='../crdts/orswot/struct.Orswot.html' title='crdts::orswot::Orswot'>Orswot</a>;</code></td></tr><tr><td><code>pub use lwwreg::<a class='struct' href='../crdts/lwwreg/struct.LWWReg.html' title='crdts::lwwreg::LWWReg'>LWWReg</a>;</code></td></tr><tr><td><code>pub use gcounter::<a class='struct' href='../crdts/gcounter/struct.GCounter.html' title='crdts::gcounter::GCounter'>GCounter</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub use vclock::<a class='struct' href='../crdts/vclock/struct.VClock.html' title='crdts::vclock::VClock'>VClock</a>;</code></td></tr><tr><td><code>pub use orswot::<a class='struct' href='../crdts/orswot/struct.Orswot.html' title='crdts::orswot::Orswot'>Orswot</a>;</code></td></tr><tr><td><code>pub use lwwreg::<a class='struct' href='../crdts/lwwreg/struct.LWWReg.html' title='crdts::lwwreg::LWWReg'>LWWReg</a>;</code></td></tr><tr><td><code>pub use gcounter::<a class='struct' href='../crdts/gcounter/struct.GCounter.html' title='crdts::gcounter::GCounter'>GCounter</a>;</code></td></tr><tr><td><code>pub use pncounter::<a class='struct' href='../crdts/pncounter/struct.PNCounter.html' title='crdts::pncounter::PNCounter'>PNCounter</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='gcounter/index.html'
-                               title='crdts::gcounter'>gcounter</a></td>
-                        <td class='docblock short'>
-                             <p><code>gcounter</code> contains the grow-only counter</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='lwwreg/index.html'
-                               title='crdts::lwwreg'>lwwreg</a></td>
-                        <td class='docblock short'>
-                             <p><code>lwwreg</code> contains the last-write-wins register.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='orswot/index.html'
-                               title='crdts::orswot'>orswot</a></td>
-                        <td class='docblock short'>
-                             <p><code>orswot</code> contains the addition-biased or-set without tombstone.
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='gcounter/index.html'
+                                  title='crdts::gcounter'>gcounter</a></td>
+                           <td class='docblock short'>
+                                <p><code>gcounter</code> contains the grow-only counter</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='lwwreg/index.html'
+                                  title='crdts::lwwreg'>lwwreg</a></td>
+                           <td class='docblock short'>
+                                <p><code>lwwreg</code> contains the last-write-wins register.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='orswot/index.html'
+                                  title='crdts::orswot'>orswot</a></td>
+                           <td class='docblock short'>
+                                <p><code>orswot</code> contains the addition-biased or-set without tombstone.
 The <code>orswot</code> crate provides an implementation of the addition-biased OR-Set
 without tombstones (ORSWOT).  Ported directly from riak_dt.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='vclock/index.html'
-                               title='crdts::vclock'>vclock</a></td>
-                        <td class='docblock short'>
-                             <p><code>vclock</code> contains the vector clock.
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='pncounter/index.html'
+                                  title='crdts::pncounter'>pncounter</a></td>
+                           <td class='docblock short'>
+                                <p><code>pncounter</code> contains the positive-negative counter</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='vclock/index.html'
+                                  title='crdts::vclock'>vclock</a></td>
+                           <td class='docblock short'>
+                                <p><code>vclock</code> contains the vector clock.
 The <code>vclock</code> crate provides a generic vector clock implementation.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.from_binary.html'
-                               title='crdts::from_binary'>from_binary</a></td>
-                        <td class='docblock short'>
-                             <p>Attempts to reconstruct a type from binary.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.to_binary.html'
-                               title='crdts::to_binary'>to_binary</a></td>
-                        <td class='docblock short'>
-                             <p>Dumps this type to binary.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.from_binary.html'
+                                  title='crdts::from_binary'>from_binary</a></td>
+                           <td class='docblock short'>
+                                <p>Attempts to reconstruct a type from binary.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.to_binary.html'
+                                  title='crdts::to_binary'>to_binary</a></td>
+                           <td class='docblock short'>
+                                <p>Dumps this type to binary.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -132,6 +128,8 @@ The <code>vclock</code> crate provides a generic vector clock implementation.</p
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -152,7 +150,7 @@ The <code>vclock</code> crate provides a generic vector clock implementation.</p
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

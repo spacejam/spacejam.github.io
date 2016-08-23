@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,11 +44,12 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>maplit</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/maplit/lib.rs.html#1-197' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/maplit/lib.rs.html#1-197' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Macros for container literals with specific type.</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>maplit</span>;
 
@@ -69,42 +71,34 @@ it matches their <code>Debug</code> output.</p>
 here at the moment.</p>
 </div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.btreemap!.html'
-                               title='maplit::btreemap!'>btreemap!</a></td>
-                        <td class='docblock short'>
-                             <p>Create a <strong>BTreeMap</strong> from a list of key-value pairs</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.btreeset!.html'
-                               title='maplit::btreeset!'>btreeset!</a></td>
-                        <td class='docblock short'>
-                             <p>Create a <strong>BTreeSet</strong> from a list of elements.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.hashmap!.html'
-                               title='maplit::hashmap!'>hashmap!</a></td>
-                        <td class='docblock short'>
-                             <p>Create a <strong>HashMap</strong> from a list of key-value pairs</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='macro' href='macro.hashset!.html'
-                               title='maplit::hashset!'>hashset!</a></td>
-                        <td class='docblock short'>
-                             <p>Create a <strong>HashSet</strong> from a list of elements.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.btreemap!.html'
+                                  title='maplit::btreemap!'>btreemap!</a></td>
+                           <td class='docblock short'>
+                                <p>Create a <strong>BTreeMap</strong> from a list of key-value pairs</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.btreeset!.html'
+                                  title='maplit::btreeset!'>btreeset!</a></td>
+                           <td class='docblock short'>
+                                <p>Create a <strong>BTreeSet</strong> from a list of elements.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.hashmap!.html'
+                                  title='maplit::hashmap!'>hashmap!</a></td>
+                           <td class='docblock short'>
+                                <p>Create a <strong>HashMap</strong> from a list of key-value pairs</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.hashset!.html'
+                                  title='maplit::hashset!'>hashset!</a></td>
+                           <td class='docblock short'>
+                                <p>Create a <strong>HashSet</strong> from a list of elements.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -127,6 +121,8 @@ here at the moment.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -147,7 +143,7 @@ here at the moment.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

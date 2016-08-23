@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["PNCounter","`PNCounter` allows the counter to be both incremented and decremented by representing the increments (P) and the decrements (N) in separate internal G-Counters."]]});

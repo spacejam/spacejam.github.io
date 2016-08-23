@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/tyler/.multirust/toolchains/stable/cargo/registry/src/github.com-88ac128001ac3a9a/quickcheck-0.2.27/src/arbitrary.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/t/.cargo/registry/src/github.com-1ecc6299db9ec823/quickcheck-0.2.27/src/arbitrary.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arbitrary.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -1118,9 +1119,9 @@
 <span class='doccomment'>/// thread using `thread::Builder::spawn`, which requires the `Send + &#39;static`</span>
 <span class='doccomment'>/// bounds.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Arbitrary</span> : <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
-    <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>g</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>g</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='ident'>empty_shrinker</span>()
     }
 }
@@ -1134,7 +1135,7 @@
 
     <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>bool</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>if</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>single_shrinker</span>(<span class='boolval'>false</span>)
+            <span class='ident'>single_shrinker</span>(<span class='boolvalue'>false</span>)
         }
         <span class='kw'>else</span> {
             <span class='ident'>empty_shrinker</span>()
@@ -1533,7 +1534,7 @@
             <span class='kw'>impl</span> <span class='ident'>UnsignedShrinker</span> {
                 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>x</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span><span class='op'>&gt;&gt;</span> {
                     <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>==</span> <span class='number'>0</span> {
-                        <span class='ident'>super</span>::<span class='ident'>empty_shrinker</span>()
+                        <span class='kw'>super</span>::<span class='ident'>empty_shrinker</span>()
                     } <span class='kw'>else</span> {
                         <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>].<span class='ident'>into_iter</span>().<span class='ident'>chain</span>(
                             <span class='ident'>UnsignedShrinker</span> {
@@ -1597,7 +1598,7 @@
             <span class='kw'>impl</span> <span class='ident'>SignedShrinker</span> {
                 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>x</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span><span class='op'>&gt;&gt;</span> {
                     <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>==</span> <span class='number'>0</span> {
-                        <span class='ident'>super</span>::<span class='ident'>empty_shrinker</span>()
+                        <span class='kw'>super</span>::<span class='ident'>empty_shrinker</span>()
                     } <span class='kw'>else</span> {
                         <span class='kw'>let</span> <span class='ident'>shrinker</span> <span class='op'>=</span> <span class='ident'>SignedShrinker</span> {
                             <span class='ident'>x</span>: <span class='ident'>x</span>,
@@ -1705,13 +1706,13 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Arbitrary</span> <span class='kw'>for</span> <span class='ident'>Duration</span> {
-    <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>gen</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>gen</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='kw'>let</span> <span class='ident'>seconds</span> <span class='op'>=</span> <span class='ident'>u64</span>::<span class='ident'>arbitrary</span>(<span class='ident'>gen</span>);
         <span class='kw'>let</span> <span class='ident'>nanoseconds</span> <span class='op'>=</span> <span class='ident'>u32</span>::<span class='ident'>arbitrary</span>(<span class='ident'>gen</span>) <span class='op'>%</span> <span class='number'>1_000_000</span>;
         <span class='ident'>Duration</span>::<span class='ident'>new</span>(<span class='ident'>seconds</span>, <span class='ident'>nanoseconds</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='ident'>Box</span>::<span class='ident'>new</span>((<span class='self'>self</span>.<span class='ident'>as_secs</span>(), <span class='self'>self</span>.<span class='ident'>subsec_nanos</span>()).<span class='ident'>shrink</span>()
             .<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>secs</span>, <span class='ident'>nanos</span>)<span class='op'>|</span> {
                 <span class='ident'>Duration</span>::<span class='ident'>new</span>(<span class='ident'>secs</span>, <span class='ident'>nanos</span> <span class='op'>%</span> <span class='number'>1_000_000</span>)
@@ -1726,7 +1727,7 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::{<span class='ident'>Duration</span>, <span class='ident'>SystemTime</span>, <span class='ident'>UNIX_EPOCH</span>};
 
     <span class='kw'>impl</span> <span class='ident'>Arbitrary</span> <span class='kw'>for</span> <span class='ident'>SystemTime</span> {
-        <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>gen</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='kw'>fn</span> <span class='ident'>arbitrary</span><span class='op'>&lt;</span><span class='ident'>G</span>: <span class='ident'>Gen</span><span class='op'>&gt;</span>(<span class='ident'>gen</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
             <span class='kw'>let</span> <span class='ident'>after_epoch</span> <span class='op'>=</span> <span class='ident'>bool</span>::<span class='ident'>arbitrary</span>(<span class='ident'>gen</span>);
             <span class='kw'>let</span> <span class='ident'>duration</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>arbitrary</span>(<span class='ident'>gen</span>);
             <span class='kw'>if</span> <span class='ident'>after_epoch</span> {
@@ -1736,7 +1737,7 @@
             }
         }
 
-        <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
+        <span class='kw'>fn</span> <span class='ident'>shrink</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
             <span class='kw'>let</span> <span class='ident'>duration</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>duration_since</span>(<span class='ident'>UNIX_EPOCH</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>duration</span>) <span class='op'>=&gt;</span> <span class='ident'>duration</span>,
                 <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='ident'>e</span>.<span class='ident'>duration</span>(),
@@ -1762,7 +1763,7 @@
     };
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Arbitrary</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Arbitrary</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>arby_unit</span>() {
@@ -1779,12 +1780,12 @@
         <span class='ident'>rep</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>||</span> { <span class='kw'>let</span> <span class='ident'>n</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>arby</span>(); <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='number'>5</span>); } );
     }
 
-    <span class='kw'>fn</span> <span class='ident'>arby</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>super</span>::<span class='ident'>Arbitrary</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='ident'>A</span> {
-        <span class='ident'>super</span>::<span class='ident'>Arbitrary</span>::<span class='ident'>arbitrary</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>gen</span>())
+    <span class='kw'>fn</span> <span class='ident'>arby</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='kw'>super</span>::<span class='ident'>Arbitrary</span><span class='op'>&gt;</span>() <span class='op'>-&gt;</span> <span class='ident'>A</span> {
+        <span class='kw'>super</span>::<span class='ident'>Arbitrary</span>::<span class='ident'>arbitrary</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>gen</span>())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>gen</span>() <span class='op'>-&gt;</span> <span class='ident'>super</span>::<span class='ident'>StdGen</span><span class='op'>&lt;</span><span class='ident'>rand</span>::<span class='ident'>ThreadRng</span><span class='op'>&gt;</span> {
-        <span class='ident'>super</span>::<span class='ident'>StdGen</span>::<span class='ident'>new</span>(<span class='ident'>rand</span>::<span class='ident'>thread_rng</span>(), <span class='number'>5</span>)
+    <span class='kw'>fn</span> <span class='ident'>gen</span>() <span class='op'>-&gt;</span> <span class='kw'>super</span>::<span class='ident'>StdGen</span><span class='op'>&lt;</span><span class='ident'>rand</span>::<span class='ident'>ThreadRng</span><span class='op'>&gt;</span> {
+        <span class='kw'>super</span>::<span class='ident'>StdGen</span>::<span class='ident'>new</span>(<span class='ident'>rand</span>::<span class='ident'>thread_rng</span>(), <span class='number'>5</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>rep</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span> : <span class='ident'>FnMut</span>() <span class='op'>-&gt;</span> () {
@@ -1801,15 +1802,15 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bools</span>() {
-        <span class='ident'>eq</span>(<span class='boolval'>false</span>, <span class='macro'>vec</span><span class='macro'>!</span>[]);
-        <span class='ident'>eq</span>(<span class='boolval'>true</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='boolval'>false</span>]);
+        <span class='ident'>eq</span>(<span class='boolvalue'>false</span>, <span class='macro'>vec</span><span class='macro'>!</span>[]);
+        <span class='ident'>eq</span>(<span class='boolvalue'>true</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='boolvalue'>false</span>]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>options</span>() {
         <span class='ident'>eq</span>(<span class='prelude-val'>None</span>::<span class='op'>&lt;</span>()<span class='op'>&gt;</span>, <span class='macro'>vec</span><span class='macro'>!</span>[]);
-        <span class='ident'>eq</span>(<span class='prelude-val'>Some</span>(<span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>None</span>]);
-        <span class='ident'>eq</span>(<span class='prelude-val'>Some</span>(<span class='boolval'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>None</span>, <span class='prelude-val'>Some</span>(<span class='boolval'>false</span>)]);
+        <span class='ident'>eq</span>(<span class='prelude-val'>Some</span>(<span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>None</span>]);
+        <span class='ident'>eq</span>(<span class='prelude-val'>Some</span>(<span class='boolvalue'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>None</span>, <span class='prelude-val'>Some</span>(<span class='boolvalue'>false</span>)]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1817,31 +1818,31 @@
         <span class='comment'>// Result&lt;A, B&gt; doesn&#39;t implement the Hash trait, so these tests</span>
         <span class='comment'>// depends on the order of shrunk results. Ug.</span>
         <span class='comment'>// TODO: Fix this.</span>
-        <span class='ident'>ordered_eq</span>(<span class='prelude-val'>Ok</span>::<span class='op'>&lt;</span><span class='ident'>bool</span>, ()<span class='op'>&gt;</span>(<span class='boolval'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>Ok</span>(<span class='boolval'>false</span>)]);
-        <span class='ident'>ordered_eq</span>(<span class='prelude-val'>Err</span>::<span class='op'>&lt;</span>(), <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='boolval'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>Err</span>(<span class='boolval'>false</span>)]);
+        <span class='ident'>ordered_eq</span>(<span class='prelude-val'>Ok</span>::<span class='op'>&lt;</span><span class='ident'>bool</span>, ()<span class='op'>&gt;</span>(<span class='boolvalue'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>Ok</span>(<span class='boolvalue'>false</span>)]);
+        <span class='ident'>ordered_eq</span>(<span class='prelude-val'>Err</span>::<span class='op'>&lt;</span>(), <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='boolvalue'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='prelude-val'>Err</span>(<span class='boolvalue'>false</span>)]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>tuples</span>() {
-        <span class='ident'>eq</span>((<span class='boolval'>false</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>false</span>)]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>true</span>), (<span class='boolval'>true</span>, <span class='boolval'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>), (<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>)]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>triples</span>() {
-        <span class='ident'>eq</span>((<span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>),
-           <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>), (<span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>),
+           <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>), (<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>quads</span>() {
-        <span class='ident'>eq</span>((<span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)]);
-        <span class='ident'>eq</span>((<span class='boolval'>true</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>),
-            <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolval'>false</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>), (<span class='boolval'>true</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)]);
+        <span class='ident'>eq</span>((<span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>),
+            <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>), (<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)]);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2052,6 +2053,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -2072,7 +2075,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

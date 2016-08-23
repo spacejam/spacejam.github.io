@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/tyler/.multirust/toolchains/stable/cargo/registry/src/github.com-88ac128001ac3a9a/quickcheck-0.2.27/src/tester.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/t/.cargo/registry/src/github.com-1ecc6299db9ec823/quickcheck-0.2.27/src/tester.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tester.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -403,7 +404,7 @@
 <span class='kw'>use</span> <span class='ident'>rand</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Arbitrary</span>, <span class='ident'>Gen</span>, <span class='ident'>StdGen</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Arbitrary</span>, <span class='ident'>Gen</span>, <span class='ident'>StdGen</span>};
 <span class='kw'>use</span> <span class='ident'>tester</span>::<span class='ident'>Status</span>::{<span class='ident'>Discard</span>, <span class='ident'>Fail</span>, <span class='ident'>Pass</span>};
 
 <span class='doccomment'>/// The main QuickCheck type for setting configuration and running QuickCheck.</span>
@@ -477,7 +478,7 @@
             <span class='kw'>match</span> <span class='ident'>f</span>.<span class='ident'>result</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>gen</span>) {
                 <span class='ident'>TestResult</span> { <span class='ident'>status</span>: <span class='ident'>Pass</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>ntests</span> <span class='op'>+=</span> <span class='number'>1</span>,
                 <span class='ident'>TestResult</span> { <span class='ident'>status</span>: <span class='ident'>Discard</span>, .. } <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
-                <span class='ident'>r</span> <span class='kw-2'>@</span> <span class='ident'>TestResult</span> { <span class='ident'>status</span>: <span class='ident'>Fail</span>, .. } <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>r</span>),
+                <span class='ident'>r</span> @ <span class='ident'>TestResult</span> { <span class='ident'>status</span>: <span class='ident'>Fail</span>, .. } <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>r</span>),
             }
         }
         <span class='prelude-val'>Ok</span>(<span class='ident'>ntests</span>)
@@ -541,14 +542,14 @@
 
 <span class='kw'>impl</span> <span class='ident'>TestResult</span> {
     <span class='doccomment'>/// Produces a test result that indicates the current test has passed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>passed</span>() <span class='op'>-&gt;</span> <span class='ident'>TestResult</span> { <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolval'>true</span>) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>passed</span>() <span class='op'>-&gt;</span> <span class='ident'>TestResult</span> { <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolvalue'>true</span>) }
 
     <span class='doccomment'>/// Produces a test result that indicates the current test has failed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>failed</span>() <span class='op'>-&gt;</span> <span class='ident'>TestResult</span> { <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolval'>false</span>) }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>failed</span>() <span class='op'>-&gt;</span> <span class='ident'>TestResult</span> { <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolvalue'>false</span>) }
 
     <span class='doccomment'>/// Produces a test result that indicates failure from a runtime error.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>TestResult</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolval'>false</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>TestResult</span>::<span class='ident'>from_bool</span>(<span class='boolvalue'>false</span>);
         <span class='ident'>r</span>.<span class='ident'>err</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>());
         <span class='ident'>r</span>
     }
@@ -592,8 +593,8 @@
     <span class='doccomment'>/// test.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_failure</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>status</span> {
-            <span class='ident'>Fail</span> <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
-            <span class='ident'>Pass</span><span class='op'>|</span><span class='ident'>Discard</span> <span class='op'>=&gt;</span> <span class='boolval'>false</span>,
+            <span class='ident'>Fail</span> <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
+            <span class='ident'>Pass</span><span class='op'>|</span><span class='ident'>Discard</span> <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
         }
     }
 
@@ -754,7 +755,7 @@
             <span class='ident'>QuickCheck</span>::<span class='ident'>new</span>()
             .<span class='ident'>quicktest</span>(<span class='ident'>thetest</span> <span class='kw'>as</span> <span class='kw'>fn</span>(<span class='ident'>vals</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>)
             .<span class='ident'>unwrap_err</span>();
-        <span class='kw'>let</span> <span class='ident'>expected_argument</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, [<span class='boolval'>true</span>, <span class='boolval'>true</span>]);
+        <span class='kw'>let</span> <span class='ident'>expected_argument</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, [<span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>]);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>failing_case</span>.<span class='ident'>arguments</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>expected_argument</span>]);
     }
 }
@@ -782,6 +783,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -802,7 +805,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

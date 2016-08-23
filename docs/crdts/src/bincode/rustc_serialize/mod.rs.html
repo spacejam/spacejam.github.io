@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/tyler/.multirust/toolchains/stable/cargo/registry/src/github.com-88ac128001ac3a9a/bincode-0.5.1/src/rustc_serialize/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/t/.cargo/registry/src/github.com-1ecc6299db9ec823/bincode-0.5.9/src/rustc_serialize/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
 
     
     
@@ -26,7 +27,7 @@
     
 
     <nav class="sidebar">
-        <a href='../../../bincode/index.html'><img src='./icon.png' alt='' width='100'></a>
+        <a href='../../../bincode/index.html'><img src='./icon.png' alt='logo' width='100'></a>
         
     </nav>
 
@@ -143,7 +144,6 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
-<span id="103">103</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A collection of serialization and deserialization functions</span>
 <span class='doccomment'>//! that use the `rustc_serialize` crate for the encodable and decodable</span>
@@ -154,7 +154,7 @@
 <span class='kw'>use</span> ::<span class='ident'>SizeLimit</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>writer</span>::{<span class='ident'>SizeChecker</span>, <span class='ident'>EncoderWriter</span>, <span class='ident'>EncodingResult</span>, <span class='ident'>EncodingError</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>reader</span>::{<span class='ident'>DecoderReader</span>, <span class='ident'>DecodingResult</span>, <span class='ident'>DecodingError</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>reader</span>::{<span class='ident'>DecoderReader</span>, <span class='ident'>DecodingResult</span>, <span class='ident'>DecodingError</span>, <span class='ident'>InvalidEncoding</span>};
 
 <span class='kw'>mod</span> <span class='ident'>reader</span>;
 <span class='kw'>mod</span> <span class='ident'>writer</span>;
@@ -247,7 +247,6 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>size_checker</span> <span class='op'>=</span> <span class='ident'>SizeChecker</span>::<span class='ident'>new</span>(<span class='ident'>max</span>);
     <span class='ident'>t</span>.<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>size_checker</span>).<span class='ident'>ok</span>().<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>size_checker</span>.<span class='ident'>written</span>)
 }
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -272,6 +271,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -292,7 +293,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>

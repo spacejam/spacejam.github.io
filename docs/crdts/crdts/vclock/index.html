@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,14 +44,15 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>crdts</a>::<wbr><a class='mod' href=''>vclock</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-104' class='srclink' href='../../src/crdts/vclock.rs.html#1-368' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-105' class='srclink' href='../../src/crdts/src/vclock.rs.html#1-368' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><code>vclock</code> contains the vector clock.
 The <code>vclock</code> crate provides a generic vector clock implementation.</p>
 
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1><pre class='rust rust-example-rendered'>
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>crdts</span>::<span class='ident'>VClock</span>;
 <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>a</span>, <span class='kw-2'>mut</span> <span class='ident'>b</span>) <span class='op'>=</span> (<span class='ident'>VClock</span>::<span class='ident'>new</span>(), <span class='ident'>VClock</span>::<span class='ident'>new</span>());
 <span class='ident'>a</span>.<span class='ident'>witness</span>(<span class='string'>&quot;A&quot;</span>.<span class='ident'>to_string</span>(), <span class='number'>2</span>);
@@ -58,11 +60,11 @@ The <code>vclock</code> crate provides a generic vector clock implementation.</p
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>a</span> <span class='op'>&gt;</span> <span class='ident'>b</span>);</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.VClock.html'
-                               title='crdts::vclock::VClock'>VClock</a></td>
-                        <td class='docblock short'>
-                             <p>A <code>VClock</code> is a standard vector clock.
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.VClock.html'
+                                  title='crdts::vclock::VClock'>VClock</a></td>
+                           <td class='docblock short'>
+                                <p>A <code>VClock</code> is a standard vector clock.
 It contains a set of &quot;actors&quot; and associated counters.
 When a particular actor witnesses a mutation, their associated
 counter in a <code>VClock</code> is incremented. <code>VClock</code> is typically used
@@ -71,20 +73,16 @@ container for application data. <code>VClock</code> just tracks causality.
 It can tell you if something causally descends something else,
 or if different replicas are &quot;concurrent&quot; (were mutated in
 isolation, and need to be resolved externally).</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='type' href='type.Counter.html'
-                               title='crdts::vclock::Counter'>Counter</a></td>
-                        <td class='docblock short'>
-                             <p>A counter is used to track causality at a particular actor.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Counter.html'
+                                  title='crdts::vclock::Counter'>Counter</a></td>
+                           <td class='docblock short'>
+                                <p>A counter is used to track causality at a particular actor.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -107,6 +105,8 @@ isolation, and need to be resolved externally).</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -127,7 +127,7 @@ isolation, and need to be resolved externally).</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
