@@ -225,6 +225,14 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Tyler Neely</span>
 <span class='comment'>//</span>
@@ -241,117 +249,146 @@
 <span class='comment'>// limitations under the License.</span>
 <span class='comment'>//</span>
 
-<span class='doccomment'>/// Rust wrapper for Facebook&#39;s RocksDB database library.</span>
+<span class='doccomment'>//! Rust wrapper for Facebook&#39;s RocksDB database library.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! [dependencies]</span>
+<span class='doccomment'>//! rocksdb = &quot;0.5.0&quot;</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! # Examples</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Simple usage:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!  use rocksdb::DB;</span>
+<span class='doccomment'>//!  let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//!  db.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
+<span class='doccomment'>//!  match db.get(b&quot;my key&quot;) {</span>
+<span class='doccomment'>//!     Ok(Some(value)) =&gt; println!(&quot;retrieved value {}&quot;, value.to_utf8().unwrap()),</span>
+<span class='doccomment'>//!     Ok(None) =&gt; println!(&quot;value not found&quot;),</span>
+<span class='doccomment'>//!     Err(e) =&gt; println!(&quot;operational problem encountered: {}&quot;, e),</span>
+<span class='doccomment'>//!  }</span>
+<span class='doccomment'>//!  db.delete(b&quot;my key&quot;).unwrap();</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Making an atomic commit of several writes:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use rocksdb::{DB, WriteBatch};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
+<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! {</span>
+<span class='doccomment'>//!     let mut batch = WriteBatch::default();</span>
+<span class='doccomment'>//!     batch.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
+<span class='doccomment'>//!     batch.put(b&quot;key2&quot;, b&quot;value2&quot;);</span>
+<span class='doccomment'>//!     batch.put(b&quot;key3&quot;, b&quot;value3&quot;);</span>
+<span class='doccomment'>//!     db.write(batch); // Atomically commits the batch</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Getting an `Iterator`:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use rocksdb::{DB, Direction, IteratorMode};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
+<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! let mut iter = db.iterator(IteratorMode::Start); // Always iterates forward</span>
+<span class='doccomment'>//! for (key, value) in iter {</span>
+<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value); //actually, need to convert [u8] keys into Strings</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! iter = db.iterator(IteratorMode::End);  // Always iterates backward</span>
+<span class='doccomment'>//! for (key, value) in iter {</span>
+<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! iter = db.iterator(IteratorMode::From(b&quot;my key&quot;, Direction::forward)); // From a key in Direction::{forward,reverse}</span>
+<span class='doccomment'>//! for (key, value) in iter {</span>
+<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // You can seek with an existing Iterator instance, too</span>
+<span class='doccomment'>//! iter.set_mode(IteratorMode::From(b&quot;another key&quot;, Direction::reverse));</span>
+<span class='doccomment'>//! for (key, value) in iter {</span>
+<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Getting an `Iterator` from a `Snapshot`:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use rocksdb::{DB, Direction};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
+<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! let snapshot = db.snapshot(); // Creates a longer-term snapshot of the DB, but closed when goes out of scope</span>
+<span class='doccomment'>//! let mut iter = snapshot.iterator(IteratorMode::Start); // Make as many iterators as you&#39;d like from one snapshot</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Rustic Merge Operator:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! use rocksdb::{Options, DB, MergeOperands};</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! fn concat_merge(new_key: &amp;[u8], existing_val: Option&lt;&amp;[u8]&gt;,</span>
+<span class='doccomment'>//!    operands: &amp;mut MergeOperands) -&gt; Vec&lt;u8&gt; {</span>
+<span class='doccomment'>//!    let mut result: Vec&lt;u8&gt; = Vec::with_capacity(operands.size_hint().0);</span>
+<span class='doccomment'>//!    existing_val.map(|v| {</span>
+<span class='doccomment'>//!        for e in v {</span>
+<span class='doccomment'>//!            result.push(*e)</span>
+<span class='doccomment'>//!        }</span>
+<span class='doccomment'>//!    });</span>
+<span class='doccomment'>//!    for op in operands {</span>
+<span class='doccomment'>//!        for e in op {</span>
+<span class='doccomment'>//!            result.push(*e)</span>
+<span class='doccomment'>//!        }</span>
+<span class='doccomment'>//!    }</span>
+<span class='doccomment'>//!    result</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! fn main() {</span>
+<span class='doccomment'>//!    let path = &quot;/path/to/rocksdb&quot;;</span>
+<span class='doccomment'>//!    let mut opts = Options::default();</span>
+<span class='doccomment'>//!    opts.create_if_missing(true);</span>
+<span class='doccomment'>//!    opts.add_merge_operator(&quot;test operator&quot;, concat_merge);</span>
+<span class='doccomment'>//!    let mut db = DB::open(&amp;opts, path).unwrap();</span>
+<span class='doccomment'>//!    let p = db.put(b&quot;k1&quot;, b&quot;a&quot;);</span>
+<span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;b&quot;);</span>
+<span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;c&quot;);</span>
+<span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;d&quot;);</span>
+<span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;efg&quot;);</span>
+<span class='doccomment'>//!    let r = db.get(b&quot;k1&quot;);</span>
+<span class='doccomment'>//!    assert!(r.unwrap().unwrap().to_utf8().unwrap() == &quot;abcdefg&quot;);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rocksdb_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
+
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>mod</span> <span class='ident'>ffi_util</span>;
+
+<span class='kw'>mod</span> <span class='ident'>comparator</span>;
+<span class='kw'>mod</span> <span class='ident'>merge_operator</span>;
+<span class='kw'>mod</span> <span class='ident'>rocksdb</span>;
+<span class='kw'>mod</span> <span class='ident'>rocksdb_options</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>DB</span>, <span class='ident'>DBCompactionStyle</span>, <span class='ident'>DBCompressionType</span>, <span class='ident'>DBIterator</span>, <span class='ident'>DBRecoveryMode</span>, <span class='ident'>DBVector</span>,
+                  <span class='ident'>Direction</span>, <span class='ident'>Error</span>, <span class='ident'>IteratorMode</span>, <span class='ident'>Snapshot</span>, <span class='ident'>WriteBatch</span>, <span class='ident'>new_bloom_filter</span>};
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>merge_operator</span>::<span class='ident'>MergeOperands</span>;
+
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BlockBasedOptions</span> {
+    <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_block_based_table_options_t</span>,
+}
+
+<span class='doccomment'>/// Database-wide options around performance and behavior.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// [dependencies]</span>
+<span class='doccomment'>/// Please read [the official tuning guide](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide), and most importantly, measure performance under realistic workloads with realistic hardware.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// rocksdb = &quot;0.5.0&quot;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
 <span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///  use rocksdb::DB;</span>
-<span class='doccomment'>///  let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
-<span class='doccomment'>///  db.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
-<span class='doccomment'>///  match db.get(b&quot;my key&quot;) {</span>
-<span class='doccomment'>///     Ok(Some(value)) =&gt; println!(&quot;retrieved value {}&quot;, value.to_utf8().unwrap()),</span>
-<span class='doccomment'>///     Ok(None) =&gt; println!(&quot;value not found&quot;),</span>
-<span class='doccomment'>///     Err(e) =&gt; println!(&quot;operational problem encountered: {}&quot;, e),</span>
-<span class='doccomment'>///  }</span>
-<span class='doccomment'>///  db.delete(b&quot;my key&quot;).unwrap();</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Making an atomic commit of several writes</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use rocksdb::{DB, WriteBatch};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>/// let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
-<span class='doccomment'>/// {</span>
-<span class='doccomment'>///     let mut batch = WriteBatch::default();</span>
-<span class='doccomment'>///     batch.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
-<span class='doccomment'>///     batch.put(b&quot;key2&quot;, b&quot;value2&quot;);</span>
-<span class='doccomment'>///     batch.put(b&quot;key3&quot;, b&quot;value3&quot;);</span>
-<span class='doccomment'>///     db.write(batch); // Atomically commits the batch</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Getting an `Iterator`</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use rocksdb::{DB, Direction, IteratorMode};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>/// let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
-<span class='doccomment'>/// let mut iter = db.iterator(IteratorMode::Start); // Always iterates forward</span>
-<span class='doccomment'>/// for (key, value) in iter {</span>
-<span class='doccomment'>///     println!(&quot;Saw {} {}&quot;, key, value); //actually, need to convert [u8] keys into Strings</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// iter = db.iterator(IteratorMode::End);  // Always iterates backward</span>
-<span class='doccomment'>/// for (key, value) in iter {</span>
-<span class='doccomment'>///     println!(&quot;Saw {} {}&quot;, key, value);</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// iter = db.iterator(IteratorMode::From(b&quot;my key&quot;, Direction::forward)); // From a key in Direction::{forward,reverse}</span>
-<span class='doccomment'>/// for (key, value) in iter {</span>
-<span class='doccomment'>///     println!(&quot;Saw {} {}&quot;, key, value);</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // You can seek with an existing Iterator instance, too</span>
-<span class='doccomment'>/// iter.set_mode(IteratorMode::From(b&quot;another key&quot;, Direction::reverse));</span>
-<span class='doccomment'>/// for (key, value) in iter {</span>
-<span class='doccomment'>///     println!(&quot;Saw {} {}&quot;, key, value);</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Getting an `Iterator` from a `Snapshot`</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use rocksdb::{DB, Direction};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>/// let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
-<span class='doccomment'>/// let snapshot = db.snapshot(); // Creates a longer-term snapshot of the DB, but closed when goes out of scope</span>
-<span class='doccomment'>/// let mut iter = snapshot.iterator(IteratorMode::Start); // Make as many iterators as you&#39;d like from one snapshot</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ###### Rustic Merge Operator</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use rocksdb::{Options, DB, MergeOperands};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// fn concat_merge(new_key: &amp;[u8], existing_val: Option&lt;&amp;[u8]&gt;,</span>
-<span class='doccomment'>///    operands: &amp;mut MergeOperands) -&gt; Vec&lt;u8&gt; {</span>
-<span class='doccomment'>///    let mut result: Vec&lt;u8&gt; = Vec::with_capacity(operands.size_hint().0);</span>
-<span class='doccomment'>///    existing_val.map(|v| {</span>
-<span class='doccomment'>///        for e in v {</span>
-<span class='doccomment'>///            result.push(*e)</span>
-<span class='doccomment'>///        }</span>
-<span class='doccomment'>///    });</span>
-<span class='doccomment'>///    for op in operands {</span>
-<span class='doccomment'>///        for e in op {</span>
-<span class='doccomment'>///            result.push(*e)</span>
-<span class='doccomment'>///        }</span>
-<span class='doccomment'>///    }</span>
-<span class='doccomment'>///    result</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///    let path = &quot;/path/to/rocksdb&quot;;</span>
-<span class='doccomment'>///    let mut opts = Options::default();</span>
-<span class='doccomment'>///    opts.create_if_missing(true);</span>
-<span class='doccomment'>///    opts.add_merge_operator(&quot;test operator&quot;, concat_merge);</span>
-<span class='doccomment'>///    let mut db = DB::open(&amp;opts, path).unwrap();</span>
-<span class='doccomment'>///    let p = db.put(b&quot;k1&quot;, b&quot;a&quot;);</span>
-<span class='doccomment'>///    db.merge(b&quot;k1&quot;, b&quot;b&quot;);</span>
-<span class='doccomment'>///    db.merge(b&quot;k1&quot;, b&quot;c&quot;);</span>
-<span class='doccomment'>///    db.merge(b&quot;k1&quot;, b&quot;d&quot;);</span>
-<span class='doccomment'>///    db.merge(b&quot;k1&quot;, b&quot;efg&quot;);</span>
-<span class='doccomment'>///    let r = db.get(b&quot;k1&quot;);</span>
-<span class='doccomment'>///    assert!(r.unwrap().unwrap().to_utf8().unwrap() == &quot;abcdefg&quot;);</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ##### Apply Some Tunings</span>
-<span class='doccomment'>/// Please read [the official tuning guide](https://github.com/facebook/rocksdb/wiki/RocksDB-Tuning-Guide), and most importantly, measure performance under realistic workloads with realistic hardware.</span>
 <span class='doccomment'>/// ```</span>
 <span class='doccomment'>/// use rocksdb::{Options, DB};</span>
 <span class='doccomment'>/// use rocksdb::DBCompactionStyle::DBUniversalCompaction;</span>
@@ -381,27 +418,6 @@
 <span class='doccomment'>///    DB::open(&amp;opts, path).unwrap()</span>
 <span class='doccomment'>/// }</span>
 <span class='doccomment'>/// ```</span>
-
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rocksdb_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
-
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>ffi_util</span>;
-
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>comparator</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>merge_operator</span>;
-<span class='kw'>mod</span> <span class='ident'>rocksdb</span>;
-<span class='kw'>mod</span> <span class='ident'>rocksdb_options</span>;
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>DB</span>, <span class='ident'>DBCompactionStyle</span>, <span class='ident'>DBCompressionType</span>, <span class='ident'>DBIterator</span>, <span class='ident'>DBRecoveryMode</span>, <span class='ident'>DBVector</span>,
-                  <span class='ident'>Direction</span>, <span class='ident'>Error</span>, <span class='ident'>IteratorMode</span>, <span class='ident'>Snapshot</span>, <span class='ident'>WriteBatch</span>, <span class='ident'>new_bloom_filter</span>};
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>merge_operator</span>::<span class='ident'>MergeOperands</span>;
-
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BlockBasedOptions</span> {
-    <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_block_based_table_options_t</span>,
-}
-
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Options</span> {
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_options_t</span>,
 }

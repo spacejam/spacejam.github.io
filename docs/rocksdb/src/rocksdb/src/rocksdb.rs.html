@@ -1010,6 +1010,11 @@
 <span id="966">966</span>
 <span id="967">967</span>
 <span id="968">968</span>
+<span id="969">969</span>
+<span id="970">970</span>
+<span id="971">971</span>
+<span id="972">972</span>
+<span id="973">973</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Tyler Neely</span>
 <span class='comment'>//</span>
@@ -1049,6 +1054,7 @@
     <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>rocksdb_cache_create_lru</span>(<span class='ident'>capacity</span>) }
 }
 
+<span class='doccomment'>/// RocksDB wrapper object.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DB</span> {
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_t</span>,
     <span class='ident'>cfs</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_column_family_handle_t</span><span class='op'>&gt;</span>,
@@ -1083,6 +1089,7 @@
     <span class='ident'>SkipAnyCorruptedRecords</span> <span class='op'>=</span> <span class='number'>3</span>,
 }
 
+<span class='doccomment'>/// An atomic batch of mutations.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>WriteBatch</span> {
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_writebatch_t</span>,
 }
@@ -1091,11 +1098,14 @@
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_readoptions_t</span>,
 }
 
+<span class='doccomment'>/// A consistent view of the database at the point of creation.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Snapshot</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>db</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>DB</span>,
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_snapshot_t</span>,
 }
 
+<span class='doccomment'>/// An iterator over a database or column family, with specifiable</span>
+<span class='doccomment'>/// ranges and direction.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DBIterator</span> {
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_iterator_t</span>,
     <span class='ident'>direction</span>: <span class='ident'>Direction</span>,
