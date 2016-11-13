@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Options` struct in crate `rocksdb`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Options">
+
+    <title>rocksdb::Options - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>rocksdb</a></p><script>window.sidebarCurrent = {name: 'Options', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>rocksdb</a>::<wbr><a class='struct' href=''>Options</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-799' class='srclink' href='../src/rocksdb/src/lib.rs.html#176-178' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Options { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../rocksdb/struct.Options.html' title='rocksdb::Options'>Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-649' class='srclink' href='../src/rocksdb/src/rocksdb_options.rs.html#97-824' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.increase_parallelism' class='method'><span id='increase_parallelism.v' class='invisible'><code>fn <a href='#method.increase_parallelism' class='fnname'>increase_parallelism</a>(&amp;mut self, parallelism: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></span></h4>
+<div class='docblock'><p>By default, RocksDB uses only one background thread for flush and
+compaction. Calling this function will set it up such that total of
+<code>total_threads</code> is used. Good value for <code>total_threads</code> is the number of
+cores. You almost definitely want to call this function if your system is
+bottlenecked by RocksDB.</p>
+
+<h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>increase_parallelism</span>(<span class='number'>3</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.optimize_level_style_compaction' class='method'><span id='optimize_level_style_compaction.v' class='invisible'><code>fn <a href='#method.optimize_level_style_compaction' class='fnname'>optimize_level_style_compaction</a>(&amp;mut self, memtable_memory_budget: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<h4 id='method.create_if_missing' class='method'><span id='create_if_missing.v' class='invisible'><code>fn <a href='#method.create_if_missing' class='fnname'>create_if_missing</a>(&amp;mut self, create_if_missing: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>If true, the database will be created if it is missing.</p>
+
+<p>Default: false</p>
+
+<h1 id='example-1' class='section-header'><a href='#example-1'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>create_if_missing</span>(<span class='bool-val'>true</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_compression_type' class='method'><span id='set_compression_type.v' class='invisible'><code>fn <a href='#method.set_compression_type' class='fnname'>set_compression_type</a>(&amp;mut self, t: <a class='enum' href='../rocksdb/enum.DBCompressionType.html' title='rocksdb::DBCompressionType'>DBCompressionType</a>)</code></span></h4>
+<div class='docblock'><p>Sets the compression algorithm that will be used for the bottommost level that
+contain files. If level-compaction is used, this option will only affect
+levels after base level.</p>
+
+<p>Default: DBCompressionType::None</p>
+
+<h1 id='example-2' class='section-header'><a href='#example-2'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>Options</span>, <span class='ident'>DBCompressionType</span>};
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_compression_type</span>(<span class='ident'>DBCompressionType</span>::<span class='ident'>Snappy</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.compression_per_level' class='method'><span id='compression_per_level.v' class='invisible'><code>fn <a href='#method.compression_per_level' class='fnname'>compression_per_level</a>(&amp;mut self, level_types: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='enum' href='../rocksdb/enum.DBCompressionType.html' title='rocksdb::DBCompressionType'>DBCompressionType</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h4>
+<div class='docblock'><p>Different levels can have different compression policies. There
+are cases where most lower levels would like to use quick compression
+algorithms while the higher levels (which have more data) use
+compression algorithms that have better compression but could
+be slower. This array, if non-empty, should have an entry for
+each level of the database; these override the value specified in
+the previous field &#39;compression&#39;.</p>
+
+<h1 id='example-3' class='section-header'><a href='#example-3'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>Options</span>, <span class='ident'>DBCompressionType</span>};
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>compression_per_level</span>(<span class='kw-2'>&amp;</span>[
+    <span class='ident'>DBCompressionType</span>::<span class='prelude-val'>None</span>,
+    <span class='ident'>DBCompressionType</span>::<span class='prelude-val'>None</span>,
+    <span class='ident'>DBCompressionType</span>::<span class='ident'>Snappy</span>,
+    <span class='ident'>DBCompressionType</span>::<span class='ident'>Snappy</span>,
+    <span class='ident'>DBCompressionType</span>::<span class='ident'>Snappy</span>
+]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_merge_operator' class='method'><span id='set_merge_operator.v' class='invisible'><code>fn <a href='#method.set_merge_operator' class='fnname'>set_merge_operator</a>(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, merge_fn: <a class='type' href='../rocksdb/merge_operator/type.MergeFn.html' title='rocksdb::merge_operator::MergeFn'>MergeFn</a>)</code></span></h4>
+<h4 id='method.add_merge_operator' class='method'><span id='add_merge_operator.v' class='invisible'><code>fn <a href='#method.add_merge_operator' class='fnname'>add_merge_operator</a>(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, merge_fn: <a class='type' href='../rocksdb/merge_operator/type.MergeFn.html' title='rocksdb::merge_operator::MergeFn'>MergeFn</a>)</code></span></h4>
+<div class='stability'><em class='stab deprecated'>Deprecated since 0.5.0<p>: add_merge_operator has been renamed to set_merge_operator</p>
+</em></div><h4 id='method.set_comparator' class='method'><span id='set_comparator.v' class='invisible'><code>fn <a href='#method.set_comparator' class='fnname'>set_comparator</a>(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, compare_fn: fn(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></span></h4>
+<div class='docblock'><p>Sets the comparator used to define the order of keys in the table.
+Default: a comparator that uses lexicographic byte-wise ordering</p>
+
+<p>The client must ensure that the comparator supplied here has the same
+name and orders keys <em>exactly</em> the same as the comparator provided to
+previous open calls on the same DB.</p>
+</div><h4 id='method.add_comparator' class='method'><span id='add_comparator.v' class='invisible'><code>fn <a href='#method.add_comparator' class='fnname'>add_comparator</a>(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, compare_fn: fn(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></span></h4>
+<div class='stability'><em class='stab deprecated'>Deprecated since 0.5.0<p>: add_comparator has been renamed to set_comparator</p>
+</em></div><h4 id='method.optimize_for_point_lookup' class='method'><span id='optimize_for_point_lookup.v' class='invisible'><code>fn <a href='#method.optimize_for_point_lookup' class='fnname'>optimize_for_point_lookup</a>(&amp;mut self, cache_size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></h4>
+<h4 id='method.set_max_open_files' class='method'><span id='set_max_open_files.v' class='invisible'><code>fn <a href='#method.set_max_open_files' class='fnname'>set_max_open_files</a>(&amp;mut self, nfiles: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the number of open files that can be used by the DB. You may need to
+increase this if your database has a large working set. Value -1 means
+files opened are always kept open. You can estimate number of files based
+on target_file_size_base and target_file_size_multiplier for level-based
+compaction. For universal-style compaction, you can usually set it to -1.</p>
+
+<p>Default: -1</p>
+
+<h1 id='example-4' class='section-header'><a href='#example-4'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_open_files</span>(<span class='number'>10</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_use_fsync' class='method'><span id='set_use_fsync.v' class='invisible'><code>fn <a href='#method.set_use_fsync' class='fnname'>set_use_fsync</a>(&amp;mut self, useit: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>If true, then every store to stable storage will issue a fsync.
+If false, then every store to stable storage will issue a fdatasync.
+This parameter should be set to true while storing data to
+filesystem like ext3 that can lose files after a reboot.</p>
+
+<p>Default: false</p>
+
+<h1 id='example-5' class='section-header'><a href='#example-5'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_use_fsync</span>(<span class='bool-val'>true</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_bytes_per_sync' class='method'><span id='set_bytes_per_sync.v' class='invisible'><code>fn <a href='#method.set_bytes_per_sync' class='fnname'>set_bytes_per_sync</a>(&amp;mut self, nbytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></h4>
+<div class='docblock'><p>Allows OS to incrementally sync files to disk while they are being
+written, asynchronously, in the background. This operation can be used
+to smooth out write I/Os over time. Users shouldn&#39;t rely on it for
+persistency guarantee.
+Issue one request for every bytes_per_sync written. 0 turns it off.</p>
+
+<p>Default: 0</p>
+
+<p>You may consider using rate_limiter to regulate write rate to device.
+When rate limiter is enabled, it automatically enables bytes_per_sync
+to 1MB.</p>
+
+<p>This option applies to table files</p>
+
+<h1 id='example-6' class='section-header'><a href='#example-6'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_bytes_per_sync</span>(<span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_disable_data_sync' class='method'><span id='set_disable_data_sync.v' class='invisible'><code>fn <a href='#method.set_disable_data_sync' class='fnname'>set_disable_data_sync</a>(&amp;mut self, disable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<h4 id='method.allow_os_buffer' class='method'><span id='allow_os_buffer.v' class='invisible'><code>fn <a href='#method.allow_os_buffer' class='fnname'>allow_os_buffer</a>(&amp;mut self, is_allow: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>Hints to the OS that it should not buffer disk I/O. Enabling this
+parameter may improve performance but increases pressure on the
+system cache.</p>
+
+<p>The exact behavior of this parameter is platform dependent.</p>
+
+<p>On POSIX systems, after RocksDB reads data from disk it will
+mark the pages as &quot;unneeded&quot;. The operating system may - or may not
+- evict these pages from memory, reducing pressure on the system
+cache. If the disk block is requested again this can result in
+additional disk I/O.</p>
+
+<p>On WINDOWS system, files will be opened in &quot;unbuffered I/O&quot; mode
+which means that data read from the disk will not be cached or
+bufferized. The hardware buffer of the devices may however still
+be used. Memory mapped files are not impacted by this parameter.</p>
+
+<p>Default: true</p>
+
+<h1 id='example-7' class='section-header'><a href='#example-7'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>allow_os_buffer</span>(<span class='bool-val'>false</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_table_cache_num_shard_bits' class='method'><span id='set_table_cache_num_shard_bits.v' class='invisible'><code>fn <a href='#method.set_table_cache_num_shard_bits' class='fnname'>set_table_cache_num_shard_bits</a>(&amp;mut self, nbits: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the number of shards used for table cache.</p>
+
+<p>Default: 6</p>
+
+<h1 id='example-8' class='section-header'><a href='#example-8'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_table_cache_num_shard_bits</span>(<span class='number'>4</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_min_write_buffer_number' class='method'><span id='set_min_write_buffer_number.v' class='invisible'><code>fn <a href='#method.set_min_write_buffer_number' class='fnname'>set_min_write_buffer_number</a>(&amp;mut self, nbuf: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the minimum number of write buffers that will be merged together
+before writing to storage.  If set to 1, then
+all write buffers are flushed to L0 as individual files and this increases
+read amplification because a get request has to check in all of these
+files. Also, an in-memory merge may result in writing lesser
+data to storage if there are duplicate records in each of these
+individual write buffers.</p>
+
+<p>Default: 1</p>
+
+<h1 id='example-9' class='section-header'><a href='#example-9'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_min_write_buffer_number</span>(<span class='number'>2</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_write_buffer_number' class='method'><span id='set_max_write_buffer_number.v' class='invisible'><code>fn <a href='#method.set_max_write_buffer_number' class='fnname'>set_max_write_buffer_number</a>(&amp;mut self, nbuf: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the total maximum number of write buffers to maintain in memory including
+copies of buffers that have already been flushed.  Unlike
+max_write_buffer_number, this parameter does not affect flushing.
+This controls the minimum amount of write history that will be available
+in memory for conflict checking when Transactions are used.</p>
+
+<p>When using an OptimisticTransactionDB:
+If this value is too low, some transactions may fail at commit time due
+to not being able to determine whether there were any write conflicts.</p>
+
+<p>When using a TransactionDB:
+If Transaction::SetSnapshot is used, TransactionDB will read either
+in-memory write buffers or SST files to do write-conflict checking.
+Increasing this value can reduce the number of reads to SST files
+done for conflict detection.</p>
+
+<p>Setting this value to 0 will cause write buffers to be freed immediately
+after they are flushed.
+If this value is set to -1, &#39;max_write_buffer_number&#39; will be used.</p>
+
+<p>Default:
+If using a TransactionDB/OptimisticTransactionDB, the default value will
+be set to the value of &#39;max_write_buffer_number&#39; if it is not explicitly
+set by the user.  Otherwise, the default is 0.</p>
+
+<h1 id='example-10' class='section-header'><a href='#example-10'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_min_write_buffer_number</span>(<span class='number'>4</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_write_buffer_size' class='method'><span id='set_write_buffer_size.v' class='invisible'><code>fn <a href='#method.set_write_buffer_size' class='fnname'>set_write_buffer_size</a>(&amp;mut self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Sets the amount of data to build up in memory (backed by an unsorted log
+on disk) before converting to a sorted on-disk file.</p>
+
+<p>Larger values increase performance, especially during bulk loads.
+Up to max_write_buffer_number write buffers may be held in memory
+at the same time,
+so you may wish to adjust this parameter to control memory usage.
+Also, a larger write buffer will result in a longer recovery time
+the next time the database is opened.</p>
+
+<p>Note that write_buffer_size is enforced per column family.
+See db_write_buffer_size for sharing memory across column families.</p>
+
+<p>Default: 67108864 (64MiB)</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-11' class='section-header'><a href='#example-11'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_write_buffer_size</span>(<span class='number'>128</span> <span class='op'>*</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_bytes_for_level_base' class='method'><span id='set_max_bytes_for_level_base.v' class='invisible'><code>fn <a href='#method.set_max_bytes_for_level_base' class='fnname'>set_max_bytes_for_level_base</a>(&amp;mut self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></h4>
+<div class='docblock'><p>Control maximum total data size for a level.
+max_bytes_for_level_base is the max total for level-1.
+Maximum number of bytes for level L can be calculated as
+(max_bytes_for_level_base) * (max_bytes_for_level_multiplier ^ (L-1))
+For example, if max_bytes_for_level_base is 200MB, and if
+max_bytes_for_level_multiplier is 10, total data size for level-1
+will be 200MB, total file size for level-2 will be 2GB,
+and total file size for level-3 will be 20GB.</p>
+
+<p>Default: 268435456 (256MiB).</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-12' class='section-header'><a href='#example-12'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_bytes_for_level_base</span>(<span class='number'>512</span> <span class='op'>*</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_bytes_for_level_multiplier' class='method'><span id='set_max_bytes_for_level_multiplier.v' class='invisible'><code>fn <a href='#method.set_max_bytes_for_level_multiplier' class='fnname'>set_max_bytes_for_level_multiplier</a>(&amp;mut self, mul: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>)</code></span></h4>
+<div class='docblock'><p>Default: 10</p>
+
+<h1 id='example-13' class='section-header'><a href='#example-13'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_bytes_for_level_multiplier</span>(<span class='number'>4</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_manifest_file_size' class='method'><span id='set_max_manifest_file_size.v' class='invisible'><code>fn <a href='#method.set_max_manifest_file_size' class='fnname'>set_max_manifest_file_size</a>(&amp;mut self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>The manifest file is rolled over on reaching this limit.
+The older manifest file be deleted.
+The default value is MAX_INT so that roll-over does not take place.</p>
+
+<h1 id='example-14' class='section-header'><a href='#example-14'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_manifest_file_size</span>(<span class='number'>20</span> <span class='op'>*</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_target_file_size_base' class='method'><span id='set_target_file_size_base.v' class='invisible'><code>fn <a href='#method.set_target_file_size_base' class='fnname'>set_target_file_size_base</a>(&amp;mut self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></h4>
+<div class='docblock'><p>Sets the target file size for compaction.
+target_file_size_base is per-file size for level-1.
+Target file size for level L can be calculated by
+target_file_size_base * (target_file_size_multiplier ^ (L-1))
+For example, if target_file_size_base is 2MB and
+target_file_size_multiplier is 10, then each file on level-1 will
+be 2MB, and each file on level 2 will be 20MB,
+and each file on level-3 will be 200MB.</p>
+
+<p>Default: 67108864 (64MiB)</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-15' class='section-header'><a href='#example-15'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_target_file_size_base</span>(<span class='number'>128</span> <span class='op'>*</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_min_write_buffer_number_to_merge' class='method'><span id='set_min_write_buffer_number_to_merge.v' class='invisible'><code>fn <a href='#method.set_min_write_buffer_number_to_merge' class='fnname'>set_min_write_buffer_number_to_merge</a>(&amp;mut self, to_merge: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the minimum number of write buffers that will be merged together
+before writing to storage.  If set to 1, then
+all write buffers are flushed to L0 as individual files and this increases
+read amplification because a get request has to check in all of these
+files. Also, an in-memory merge may result in writing lesser
+data to storage if there are duplicate records in each of these
+individual write buffers.</p>
+
+<p>Default: 1</p>
+
+<h1 id='example-16' class='section-header'><a href='#example-16'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_min_write_buffer_number_to_merge</span>(<span class='number'>2</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_level_zero_file_num_compaction_trigger' class='method'><span id='set_level_zero_file_num_compaction_trigger.v' class='invisible'><code>fn <a href='#method.set_level_zero_file_num_compaction_trigger' class='fnname'>set_level_zero_file_num_compaction_trigger</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the number of files to trigger level-0 compaction. A value &lt;0 means that
+level-0 compaction will not be triggered by number of files at all.</p>
+
+<p>Default: 4</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-17' class='section-header'><a href='#example-17'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_level_zero_file_num_compaction_trigger</span>(<span class='number'>8</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_level_zero_slowdown_writes_trigger' class='method'><span id='set_level_zero_slowdown_writes_trigger.v' class='invisible'><code>fn <a href='#method.set_level_zero_slowdown_writes_trigger' class='fnname'>set_level_zero_slowdown_writes_trigger</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the soft limit on number of level-0 files. We start slowing down writes at this
+point. A value &lt;0 means that no writing slow down will be triggered by
+number of files in level-0.</p>
+
+<p>Default: 20</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-18' class='section-header'><a href='#example-18'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_level_zero_slowdown_writes_trigger</span>(<span class='number'>10</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_level_zero_stop_writes_trigger' class='method'><span id='set_level_zero_stop_writes_trigger.v' class='invisible'><code>fn <a href='#method.set_level_zero_stop_writes_trigger' class='fnname'>set_level_zero_stop_writes_trigger</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the maximum number of level-0 files.  We stop writes at this point.</p>
+
+<p>Default: 24</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-19' class='section-header'><a href='#example-19'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_level_zero_stop_writes_trigger</span>(<span class='number'>48</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_compaction_style' class='method'><span id='set_compaction_style.v' class='invisible'><code>fn <a href='#method.set_compaction_style' class='fnname'>set_compaction_style</a>(&amp;mut self, style: <a class='enum' href='../rocksdb/enum.DBCompactionStyle.html' title='rocksdb::DBCompactionStyle'>DBCompactionStyle</a>)</code></span></h4>
+<div class='docblock'><p>Sets the compaction style.</p>
+
+<p>Default: DBCompactionStyle::Level</p>
+
+<h1 id='example-20' class='section-header'><a href='#example-20'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>Options</span>, <span class='ident'>DBCompactionStyle</span>};
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_compaction_style</span>(<span class='ident'>DBCompactionStyle</span>::<span class='ident'>Universal</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_background_compactions' class='method'><span id='set_max_background_compactions.v' class='invisible'><code>fn <a href='#method.set_max_background_compactions' class='fnname'>set_max_background_compactions</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the maximum number of concurrent background compaction jobs, submitted to
+the default LOW priority thread pool.
+We first try to schedule compactions based on
+<code>base_background_compactions</code>. If the compaction cannot catch up , we
+will increase number of compaction threads up to
+<code>max_background_compactions</code>.</p>
+
+<p>If you&#39;re increasing this, also consider increasing number of threads in
+LOW priority thread pool. For more information, see
+Env::SetBackgroundThreads</p>
+
+<p>Default: 1</p>
+
+<h1 id='example-21' class='section-header'><a href='#example-21'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_background_compactions</span>(<span class='number'>2</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_max_background_flushes' class='method'><span id='set_max_background_flushes.v' class='invisible'><code>fn <a href='#method.set_max_background_flushes' class='fnname'>set_max_background_flushes</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the maximum number of concurrent background memtable flush jobs, submitted to
+the HIGH priority thread pool.</p>
+
+<p>By default, all background jobs (major compaction and memtable flush) go
+to the LOW priority pool. If this option is set to a positive number,
+memtable flush jobs will be submitted to the HIGH priority pool.
+It is important when the same Env is shared by multiple db instances.
+Without a separate pool, long running major compaction jobs could
+potentially block memtable flush jobs of other db instances, leading to
+unnecessary Put stalls.</p>
+
+<p>If you&#39;re increasing this, also consider increasing number of threads in
+HIGH priority thread pool. For more information, see
+Env::SetBackgroundThreads</p>
+
+<p>Default: 1</p>
+
+<h1 id='example-22' class='section-header'><a href='#example-22'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_max_background_flushes</span>(<span class='number'>2</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_disable_auto_compactions' class='method'><span id='set_disable_auto_compactions.v' class='invisible'><code>fn <a href='#method.set_disable_auto_compactions' class='fnname'>set_disable_auto_compactions</a>(&amp;mut self, disable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>Disables automatic compactions. Manual compactions can still
+be issued on this column family</p>
+
+<p>Default: false</p>
+
+<p>Dynamically changeable through SetOptions() API</p>
+
+<h1 id='example-23' class='section-header'><a href='#example-23'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_disable_auto_compactions</span>(<span class='bool-val'>true</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_block_based_table_factory' class='method'><span id='set_block_based_table_factory.v' class='invisible'><code>fn <a href='#method.set_block_based_table_factory' class='fnname'>set_block_based_table_factory</a>(&amp;mut self, factory: &amp;<a class='struct' href='../rocksdb/struct.BlockBasedOptions.html' title='rocksdb::BlockBasedOptions'>BlockBasedOptions</a>)</code></span></h4>
+<h4 id='method.set_report_bg_io_stats' class='method'><span id='set_report_bg_io_stats.v' class='invisible'><code>fn <a href='#method.set_report_bg_io_stats' class='fnname'>set_report_bg_io_stats</a>(&amp;mut self, enable: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>Measure IO stats in compactions and flushes, if true.</p>
+
+<p>Default: false</p>
+
+<h1 id='example-24' class='section-header'><a href='#example-24'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_report_bg_io_stats</span>(<span class='bool-val'>true</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_wal_recovery_mode' class='method'><span id='set_wal_recovery_mode.v' class='invisible'><code>fn <a href='#method.set_wal_recovery_mode' class='fnname'>set_wal_recovery_mode</a>(&amp;mut self, mode: <a class='enum' href='../rocksdb/enum.DBRecoveryMode.html' title='rocksdb::DBRecoveryMode'>DBRecoveryMode</a>)</code></span></h4>
+<div class='docblock'><p>Recovery mode to control the consistency while replaying WAL</p>
+
+<p>Default: DBRecoveryMode::PointInTime</p>
+
+<h1 id='example-25' class='section-header'><a href='#example-25'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>Options</span>, <span class='ident'>DBRecoveryMode</span>};
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_wal_recovery_mode</span>(<span class='ident'>DBRecoveryMode</span>::<span class='ident'>AbsoluteConsistency</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.enable_statistics' class='method'><span id='enable_statistics.v' class='invisible'><code>fn <a href='#method.enable_statistics' class='fnname'>enable_statistics</a>(&amp;mut self)</code></span></h4>
+<h4 id='method.get_statistics' class='method'><span id='get_statistics.v' class='invisible'><code>fn <a href='#method.get_statistics' class='fnname'>get_statistics</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></span></h4>
+<h4 id='method.set_stats_dump_period_sec' class='method'><span id='set_stats_dump_period_sec.v' class='invisible'><code>fn <a href='#method.set_stats_dump_period_sec' class='fnname'>set_stats_dump_period_sec</a>(&amp;mut self, period: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>)</code></span></h4>
+<div class='docblock'><p>If not zero, dump rocksdb.stats to LOG every stats_dump_period_sec</p>
+
+<p>Default: 600 (10 min)</p>
+
+<h1 id='example-26' class='section-header'><a href='#example-26'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>rocksdb</span>::<span class='ident'>Options</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>default</span>();
+<span class='ident'>opts</span>.<span class='ident'>set_stats_dump_period_sec</span>(<span class='number'>300</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.set_num_levels' class='method'><span id='set_num_levels.v' class='invisible'><code>fn <a href='#method.set_num_levels' class='fnname'>set_num_levels</a>(&amp;mut self, n: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>)</code></span></h4>
+<div class='docblock'><p>Sets the number of levels for this database</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../rocksdb/struct.Options.html' title='rocksdb::Options'>Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-620' class='srclink' href='../src/rocksdb/src/rocksdb_options.rs.html#28-34' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../rocksdb/struct.Options.html' title='rocksdb::Options'>Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-779' class='srclink' href='../src/rocksdb/src/rocksdb_options.rs.html#826-836' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class='method'><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../rocksdb/struct.Options.html' title='rocksdb::Options'>Options</a></code></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "rocksdb";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
