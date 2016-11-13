@@ -233,6 +233,22 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Tyler Neely</span>
 <span class='comment'>//</span>
@@ -251,17 +267,14 @@
 
 <span class='doccomment'>//! Rust wrapper for Facebook&#39;s RocksDB database library.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! rocksdb = &quot;0.5.0&quot;</span>
-<span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! # Examples</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Simple usage:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!  use rocksdb::DB;</span>
-<span class='doccomment'>//!  let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//!  // NB: db is automatically closed at end of lifetime</span>
+<span class='doccomment'>//!  let db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
 <span class='doccomment'>//!  db.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
 <span class='doccomment'>//!  match db.get(b&quot;my key&quot;) {</span>
 <span class='doccomment'>//!     Ok(Some(value)) =&gt; println!(&quot;retrieved value {}&quot;, value.to_utf8().unwrap()),</span>
@@ -276,8 +289,7 @@
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! use rocksdb::{DB, WriteBatch};</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! let db = DB::open_default(&quot;/path/for/rocksdb/storage1&quot;).unwrap();</span>
 <span class='doccomment'>//! {</span>
 <span class='doccomment'>//!     let mut batch = WriteBatch::default();</span>
 <span class='doccomment'>//!     batch.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
@@ -292,35 +304,34 @@
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! use rocksdb::{DB, Direction, IteratorMode};</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage2&quot;).unwrap();</span>
 <span class='doccomment'>//! let mut iter = db.iterator(IteratorMode::Start); // Always iterates forward</span>
 <span class='doccomment'>//! for (key, value) in iter {</span>
-<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value); //actually, need to convert [u8] keys into Strings</span>
+<span class='doccomment'>//!     println!(&quot;Saw {:?} {:?}&quot;, key, value);</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! iter = db.iterator(IteratorMode::End);  // Always iterates backward</span>
 <span class='doccomment'>//! for (key, value) in iter {</span>
-<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//!     println!(&quot;Saw {:?} {:?}&quot;, key, value);</span>
 <span class='doccomment'>//! }</span>
-<span class='doccomment'>//! iter = db.iterator(IteratorMode::From(b&quot;my key&quot;, Direction::forward)); // From a key in Direction::{forward,reverse}</span>
+<span class='doccomment'>//! iter = db.iterator(IteratorMode::From(b&quot;my key&quot;, Direction::Forward)); // From a key in Direction::{forward,reverse}</span>
 <span class='doccomment'>//! for (key, value) in iter {</span>
-<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//!     println!(&quot;Saw {:?} {:?}&quot;, key, value);</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! // You can seek with an existing Iterator instance, too</span>
-<span class='doccomment'>//! iter.set_mode(IteratorMode::From(b&quot;another key&quot;, Direction::reverse));</span>
+<span class='doccomment'>//! iter = db.iterator(IteratorMode::Start);</span>
+<span class='doccomment'>//! iter.set_mode(IteratorMode::From(b&quot;another key&quot;, Direction::Reverse));</span>
 <span class='doccomment'>//! for (key, value) in iter {</span>
-<span class='doccomment'>//!     println!(&quot;Saw {} {}&quot;, key, value);</span>
+<span class='doccomment'>//!     println!(&quot;Saw {:?} {:?}&quot;, key, value);</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Getting an `Iterator` from a `Snapshot`:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use rocksdb::{DB, Direction};</span>
+<span class='doccomment'>//! use rocksdb::{DB, IteratorMode};</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>//! let mut db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//! let db = DB::open_default(&quot;/path/for/rocksdb/storage3&quot;).unwrap();</span>
 <span class='doccomment'>//! let snapshot = db.snapshot(); // Creates a longer-term snapshot of the DB, but closed when goes out of scope</span>
 <span class='doccomment'>//! let mut iter = snapshot.iterator(IteratorMode::Start); // Make as many iterators as you&#39;d like from one snapshot</span>
 <span class='doccomment'>//! ```</span>
@@ -351,7 +362,7 @@
 <span class='doccomment'>//!    let mut opts = Options::default();</span>
 <span class='doccomment'>//!    opts.create_if_missing(true);</span>
 <span class='doccomment'>//!    opts.add_merge_operator(&quot;test operator&quot;, concat_merge);</span>
-<span class='doccomment'>//!    let mut db = DB::open(&amp;opts, path).unwrap();</span>
+<span class='doccomment'>//!    let db = DB::open(&amp;opts, path).unwrap();</span>
 <span class='doccomment'>//!    let p = db.put(b&quot;k1&quot;, b&quot;a&quot;);</span>
 <span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;b&quot;);</span>
 <span class='doccomment'>//!    db.merge(b&quot;k1&quot;, b&quot;c&quot;);</span>
@@ -391,17 +402,17 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```</span>
 <span class='doccomment'>/// use rocksdb::{Options, DB};</span>
-<span class='doccomment'>/// use rocksdb::DBCompactionStyle::DBUniversalCompaction;</span>
+<span class='doccomment'>/// use rocksdb::DBCompactionStyle;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn badly_tuned_for_somebody_elses_disk() -&gt; DB {</span>
-<span class='doccomment'>///    let path = &quot;_rust_rocksdb_optimizetest&quot;;</span>
+<span class='doccomment'>///    let path = &quot;/path/for/rocksdb/storage5&quot;;</span>
 <span class='doccomment'>///    let mut opts = Options::default();</span>
 <span class='doccomment'>///    opts.create_if_missing(true);</span>
 <span class='doccomment'>///    opts.set_max_open_files(10000);</span>
 <span class='doccomment'>///    opts.set_use_fsync(false);</span>
 <span class='doccomment'>///    opts.set_bytes_per_sync(8388608);</span>
 <span class='doccomment'>///    opts.set_disable_data_sync(false);</span>
-<span class='doccomment'>///    opts.set_block_cache_size_mb(1024);</span>
+<span class='doccomment'>///    opts.optimize_for_point_lookup(1024);</span>
 <span class='doccomment'>///    opts.set_table_cache_num_shard_bits(6);</span>
 <span class='doccomment'>///    opts.set_max_write_buffer_number(32);</span>
 <span class='doccomment'>///    opts.set_write_buffer_size(536870912);</span>
@@ -409,10 +420,9 @@
 <span class='doccomment'>///    opts.set_min_write_buffer_number_to_merge(4);</span>
 <span class='doccomment'>///    opts.set_level_zero_stop_writes_trigger(2000);</span>
 <span class='doccomment'>///    opts.set_level_zero_slowdown_writes_trigger(0);</span>
-<span class='doccomment'>///    opts.set_compaction_style(DBUniversalCompaction);</span>
+<span class='doccomment'>///    opts.set_compaction_style(DBCompactionStyle::Universal);</span>
 <span class='doccomment'>///    opts.set_max_background_compactions(4);</span>
 <span class='doccomment'>///    opts.set_max_background_flushes(4);</span>
-<span class='doccomment'>///    opts.set_filter_deletes(false);</span>
 <span class='doccomment'>///    opts.set_disable_auto_compactions(true);</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>///    DB::open(&amp;opts, path).unwrap()</span>
@@ -422,6 +432,28 @@
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_options_t</span>,
 }
 
+<span class='doccomment'>/// Optionally disable WAL or sync for this write.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// # Examples</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Making an unsafe write of a batch:</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// use rocksdb::{DB, WriteBatch, WriteOptions};</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// let db = DB::open_default(&quot;/path/for/rocksdb/storage6&quot;).unwrap();</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// let mut batch = WriteBatch::default();</span>
+<span class='doccomment'>/// batch.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
+<span class='doccomment'>/// batch.put(b&quot;key2&quot;, b&quot;value2&quot;);</span>
+<span class='doccomment'>/// batch.put(b&quot;key3&quot;, b&quot;value3&quot;);</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// let mut write_options = WriteOptions::default();</span>
+<span class='doccomment'>/// write_options.set_sync(false);</span>
+<span class='doccomment'>/// write_options.disable_wal(true);</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// db.write_opt(batch, &amp;write_options);</span>
+<span class='doccomment'>/// ```</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>WriteOptions</span> {
     <span class='ident'>inner</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>rocksdb_writeoptions_t</span>,
 }
