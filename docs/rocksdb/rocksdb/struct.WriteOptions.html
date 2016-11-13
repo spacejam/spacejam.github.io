@@ -56,7 +56,7 @@
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>rocksdb</span>::{<span class='ident'>DB</span>, <span class='ident'>WriteBatch</span>, <span class='ident'>WriteOptions</span>};
 
-<span class='kw'>let</span> <span class='ident'>db</span> <span class='op'>=</span> <span class='ident'>DB</span>::<span class='ident'>open_default</span>(<span class='string'>&quot;/path/for/rocksdb/storage6&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>db</span> <span class='op'>=</span> <span class='ident'>DB</span>::<span class='ident'>open_default</span>(<span class='string'>&quot;path/for/rocksdb/storage6&quot;</span>).<span class='ident'>unwrap</span>();
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>batch</span> <span class='op'>=</span> <span class='ident'>WriteBatch</span>::<span class='ident'>default</span>();
 <span class='ident'>batch</span>.<span class='ident'>put</span>(<span class='string'>b&quot;my key&quot;</span>, <span class='string'>b&quot;my value&quot;</span>);

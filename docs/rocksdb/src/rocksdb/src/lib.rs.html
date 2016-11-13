@@ -182,7 +182,7 @@
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!  use rocksdb::DB;</span>
 <span class='doccomment'>//!  // NB: db is automatically closed at end of lifetime</span>
-<span class='doccomment'>//!  let db = DB::open_default(&quot;/path/for/rocksdb/storage&quot;).unwrap();</span>
+<span class='doccomment'>//!  let db = DB::open_default(&quot;path/for/rocksdb/storage&quot;).unwrap();</span>
 <span class='doccomment'>//!  db.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
 <span class='doccomment'>//!  match db.get(b&quot;my key&quot;) {</span>
 <span class='doccomment'>//!     Ok(Some(value)) =&gt; println!(&quot;retrieved value {}&quot;, value.to_utf8().unwrap()),</span>
@@ -194,7 +194,7 @@
 <span class='doccomment'>//!</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rocksdb_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>librocksdb_sys</span> <span class='kw'>as</span> <span class='ident'>ffi</span>;
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>ffi_util</span>;
@@ -225,7 +225,7 @@
 <span class='doccomment'>/// use rocksdb::DBCompactionStyle;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn badly_tuned_for_somebody_elses_disk() -&gt; DB {</span>
-<span class='doccomment'>///    let path = &quot;/path/for/rocksdb/storage5&quot;;</span>
+<span class='doccomment'>///    let path = &quot;path/for/rocksdb/storage5&quot;;</span>
 <span class='doccomment'>///    let mut opts = Options::default();</span>
 <span class='doccomment'>///    opts.create_if_missing(true);</span>
 <span class='doccomment'>///    opts.set_max_open_files(10000);</span>
@@ -261,7 +261,7 @@
 <span class='doccomment'>/// ```</span>
 <span class='doccomment'>/// use rocksdb::{DB, WriteBatch, WriteOptions};</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// let db = DB::open_default(&quot;/path/for/rocksdb/storage6&quot;).unwrap();</span>
+<span class='doccomment'>/// let db = DB::open_default(&quot;path/for/rocksdb/storage6&quot;).unwrap();</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let mut batch = WriteBatch::default();</span>
 <span class='doccomment'>/// batch.put(b&quot;my key&quot;, b&quot;my value&quot;);</span>
