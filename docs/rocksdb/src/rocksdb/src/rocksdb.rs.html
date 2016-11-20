@@ -1064,6 +1064,12 @@
 <span id="1020">1020</span>
 <span id="1021">1021</span>
 <span id="1022">1022</span>
+<span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
+<span id="1027">1027</span>
+<span id="1028">1028</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Tyler Neely</span>
 <span class='comment'>//</span>
@@ -1081,6 +1087,7 @@
 <span class='comment'>//</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>;
@@ -1235,6 +1242,12 @@
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>String</span> {
     <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>e</span>: <span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
         <span class='ident'>e</span>.<span class='ident'>message</span>
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
+        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>message</span>
     }
 }
 
@@ -2000,10 +2013,9 @@
     <span class='comment'>// The DB will still be open when we try to destroy it and the lock should fail.</span>
     <span class='kw'>match</span> <span class='ident'>DB</span>::<span class='ident'>destroy</span>(<span class='kw-2'>&amp;</span><span class='ident'>opts</span>, <span class='ident'>path</span>) {
         <span class='prelude-val'>Err</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> {
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>s</span> <span class='op'>==</span>
-                    <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='string'>&quot;IO error: lock _rust_rocksdb_error/LOCK: No \
-                                locks available&quot;</span>
-                .<span class='ident'>to_owned</span>()))
+            <span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>to_string</span>();
+            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>message</span>.<span class='ident'>find</span>(<span class='string'>&quot;IO error:&quot;</span>).<span class='ident'>is_some</span>());
+            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>message</span>.<span class='ident'>find</span>(<span class='string'>&quot;_rust_rocksdb_error/LOCK:&quot;</span>).<span class='ident'>is_some</span>());
         }
         <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;should fail&quot;</span>),
     }
