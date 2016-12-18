@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/rocksdb/src/lib.rs.html#16-117' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/rocksdb/src/lib.rs.html#16-164' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Rust wrapper for RocksDB.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
@@ -63,8 +63,22 @@
  }
  <span class='ident'>db</span>.<span class='ident'>delete</span>(<span class='string'>b&quot;my key&quot;</span>).<span class='ident'>unwrap</span>();<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use merge_operator::<a class='struct' href='../rocksdb/merge_operator/struct.MergeOperands.html' title='rocksdb::merge_operator::MergeOperands'>MergeOperands</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub use merge_operator::<a class='struct' href='../rocksdb/merge_operator/struct.MergeOperands.html' title='rocksdb::merge_operator::MergeOperands'>MergeOperands</a>;</code></td></tr><tr><td><code>pub use compaction_filter::<a class='enum' href='../rocksdb/compaction_filter/enum.Decision.html' title='rocksdb::compaction_filter::Decision'>Decision</a> as CompactionDecision;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='backup/index.html'
+                                  title='rocksdb::backup'>backup</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='compaction_filter/index.html'
+                                  title='rocksdb::compaction_filter'>compaction_filter</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class='mod' href='merge_operator/index.html'
                                   title='rocksdb::merge_operator'>merge_operator</a></td>
@@ -84,7 +98,7 @@
                            <td><a class='struct' href='struct.DB.html'
                                   title='rocksdb::DB'>DB</a></td>
                            <td class='docblock-short'>
-                                <p>RocksDB wrapper object.</p>
+                                <p>A RocksDB database.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -99,7 +113,7 @@ ranges and direction.</p>
                            <td><a class='struct' href='struct.DBVector.html'
                                   title='rocksdb::DBVector'>DBVector</a></td>
                            <td class='docblock-short'>
-                                <p>Wrapper around bytes stored in the database</p>
+                                <p>Vector of bytes stored in the database.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -127,7 +141,7 @@ ranges and direction.</p>
                            <td><a class='struct' href='struct.WriteBatch.html'
                                   title='rocksdb::WriteBatch'>WriteBatch</a></td>
                            <td class='docblock-short'>
-                                <p>An atomic batch of mutations.</p>
+                                <p>An atomic batch of write operations.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

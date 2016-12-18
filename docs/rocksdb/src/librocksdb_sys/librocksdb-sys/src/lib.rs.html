@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/t/.cargo/registry/src/github.com-1ecc6299db9ec823/librocksdb-sys-0.4.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `librocksdb-sys/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
 
     
@@ -1063,6 +1063,11 @@
 <span id="1019">1019</span>
 <span id="1020">1020</span>
 <span id="1021">1021</span>
+<span id="1022">1022</span>
+<span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Tyler Neely, 2016 Alex Regueiro</span>
 <span class='comment'>//</span>
@@ -2024,6 +2029,11 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_similar_size_compaction_stop_style</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_total_size_compaction_stop_style</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
 
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_recovery_mode_tolerate_corrupted_tail_records</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_recovery_mode_absolute_consistency</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_recovery_mode_point_in_time</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>rocksdb_recovery_mode_skip_any_corrupted_record</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
+
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>rocksdb_t</span> { }
 
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>rocksdb_backup_engine_t</span> { }
@@ -2140,13 +2150,13 @@
     
 
     <script>
-        window.rootPath = "../../";
+        window.rootPath = "../../../../";
         window.currentCrate = "librocksdb_sys";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../../../../search-index.js"></script>
 </body>
 </html>
