@@ -1,0 +1,120 @@
+html {
+  position: relative;
+  min-height: 100%;
+  color: #efefef;
+  background: url('./img/helicopter_xs.jpg') #000 no-repeat top left fixed;
+  background-size: contain;
+}
+
+@media (min-width: 500px) {
+  html {
+    background: url('./img/helicopter.jpg') #000 no-repeat bottom left fixed;
+    background-size: contain;
+  }
+}
+
+body {
+  font-family: Courier New, Courier New, Courier6, monospace;
+  margin: 0;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.content {
+  background: rgba(0, 0, 0, 0.60);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header, .container {
+  margin: 0 50px;
+  max-width: 700px;
+  margin-bottom: 40px;
+}
+.container:after {
+  content: "_____";
+}
+.container:last-child:after {
+  content: none;
+}
+@media (max-width: 500px) {
+  .container {
+    margin: 0 10px;
+  }
+}
+
+h1 {
+  font-size: 32px;
+  color: #fff;
+  margin: 20px 0 10px 0;
+}
+h1 a, h1 a:hover,
+h3 a, h3 a:hover {
+  color: #000000;
+  border: none;
+  color: #D1413C;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 18px;
+  margin: 25px 0 15px 0;
+}
+
+p {
+  line-height: 1.3em;
+}
+
+.align-right {
+  text-align: right;
+}
+.align-center {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: #FF5F52;
+  border-bottom: 1px #FF5F52 dotted;
+}
+a:hover {
+  text-decoration: none;
+  border-bottom: 1px #FF5F52 solid;
+}
+
+a.button {
+  padding: 10px 20px;
+  border: 3px #999 solid;
+  cursor: pointer;
+}
+a.button:hover {
+  border: 3px #000 solid;
+}
+
+ul {
+  padding: 0;
+  display: block;
+  margin-top: 0;
+}
+li {
+  /*background: #000;*/
+  /*color: #999;*/
+  display: inline-block;
+  padding: 4px 10px 2px 10px;
+  margin:  10px;
+}
+li a {
+  border: none;
+  color: #FF5F52;
+}
+li a:hover {
+  color: #FF5F52;
+}

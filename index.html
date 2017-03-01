@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="main.css" rel="stylesheet">
+
+    <title>tyler neely | distributed systems borg</title>
+</head>
+
+<body>
+  <div class="page">
+    <div class="content">
+
+      <div class="header h-card">
+        <h1 class="p-name">
+          <a href="http://tylerneely.com" class="u-url" rel="me">tyler neely</a>
+        </h1>
+        <ul>
+          <li>
+            <a href="https://github.com/spacejam" rel="me">github</a>
+          </li>
+          <li>
+            <a href="http://sadistic.systems" rel="me">work with me</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="container">
+        <p>I've built and operated a variety of stateful distributed systems, cutting across the consistency-availability, latency-throughput, and price-performance spectra. I get maniacal pleasure from invalidating my assumptions, 303/808/909s and exploring.</p>
+      </div>
+
+      <div class="container">
+        <h2>projects</h2>
+        <p>Some things I have built or contributed to.</p>
+
+        <h3><a href="https://github.com/spacejam/rust-rocksdb">
+          rust-rocksdb
+        </a></h3>
+        <p>
+          Rust bindings for RocksDB, a highly configurable LSM embedded database. Currently used in production at several large internet services. My favorite user is TiKV, a horizontally scalable linearizable KV written in Rust, powering the mysql-compatible TiDB horizontally scalable database.
+        </p>
+
+        <h3><a href="https://github.com/tumblr/jetpants">
+          jetpants
+        </a></h3>
+        <p>
+          A framework for managing very large MySQL systems. We created this at Tumblr to manage O(hundreds of TB) of primary business data, accessible at sub-millisecond latencies :)
+        </p>
+
+        <h3><a href="https://github.com/dcos/minuteman">
+          minuteman
+        </a></h3>
+        <p>
+          Fully distributed load balancer written in Erlang for helping services on Mesos communicate seamlessly with each other. Uses a CRDT-based overlay network based on Hyparview for failure detection.
+        </p>
+
+        <h3><a href="https://github.com/spacejam/void">
+          void
+        </a></h3>
+        <p>
+          A terminal-based personal organizer, mind-mapper, task tracker, and time-series visualizer written in Rust.
+        </p>
+
+        <h3><a href="https://github.com/spacejam/rust-crdt">
+          rust-crdt
+        </a></h3>
+        <p>
+          CRDT (eventual consistency) library for distributed systems. Thoroughly tested using quickcheck.
+        </p>
+
+        <h3><a href="https://github.com/pingcap/tikv">
+          tikv
+        </a></h3>
+        <p>
+          Horizontally scalable linearizable KV store based on raft, which I've performed fault injection for.
+        </p>
+
+        <h3><a href="https://github.com/mesosphere/etcd-mesos">
+          etcd-mesos
+        </a></h3>
+        <p>
+          A self-healing distributed etcd supervisor, running on Mesos. Built when I was on the Kubernetes team at Mesosphere, allowing us to deploy full Kubernetes clusters on top of Mesos with the click of a mouse.
+        </p>
+
+        <h3><a href="https://github.com/coreos/etcd">
+          etcd
+        </a></h3>
+        <p>
+          In the process of fault injecting systems I've built on top of etcd, I've found several interesting bugs in etcd itself. I've provided minor architectural guidance that was incorporated in etcd v3.
+        </p>
+
+        <h3><a href="https://github.com/cockroachdb/cockroach">
+          CockroachDB
+        </a></h3>
+        <p>
+          A monolithic horizontally scalable Postgres-compatible database written in Go with both snapshot and serializable snapshot configurable isolation levels. I was an early contributor, and wrote a high-performance histogram-based metric system for measuring interesting operational statistics, which I later extracted into loghisto.
+        </p>
+
+        <h3><a href="https://github.com/spacejam/loghisto">
+          loghisto
+        </a></h3>
+        <p>
+          A high-performance histogram implementation for understanding the latency tail of a system, either in production or development. Does not rely on sampling methods which break in real systems work. Uses logarithmically bucketed histograms.
+        </p>
+      </div>
+
+      <div class="container">
+        <h2>writing</h2>
+
+        <h3><a href="https://mesosphere.com/blog/2015/10/26/etcd-mesos-kubernetes/">
+          Hardening Kubernetes on the DCOS with etcd-mesos
+        </a></h3>
+        <p>
+          A brief article I wrote describing some of the work that went into etcd-mesos.
+        </p>
+
+    </div>
+  </div>
+</body>
+
+</html>
