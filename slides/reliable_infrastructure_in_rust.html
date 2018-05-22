@@ -1,0 +1,173 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css" id="theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section data-background-image="images/eiffel-tower.jpg" data-background-size="cover">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            RELIABLE INFRASTRUCTURE
+          </div>
+        </section>
+				<section>
+					<h2>Roadmap</h2>
+					<ul>
+						<li class="fragment">what we get wrong</li>
+						<li class="fragment">understandable architecture</li>
+						<li class="fragment">exercising our systems</li>
+					</ul>
+        </section>
+        <section>
+					<q cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf">
+            almost all (92%) of the catastrophic system failures are the result of incorrect handling of non-fatal errors explicitly signaled in software.
+          </q>
+
+          <div style="font-size: 1vw;"><i>- Simple Testing Can Prevent Most Critical Failures (OSDI '14)</i></div>
+        </section>
+        <section>
+					<q cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf">
+            in 58% of the catastrophic failures, the underlying faults could easily have been detected through simple testing of error handling code.
+          </q>
+
+          <div style="font-size: 1vw;"><i>- Simple Testing Can Prevent Most Critical Failures (OSDI '14)</i></div>
+        </section>
+        <section>
+					<q cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf">
+            In fact, in 35% of the catastrophic failures, the faults in the error handling code fall into three trivial patterns:
+            <ul>
+              <li class="fragment">(i) the error handler is simply empty or only contains a log printing statement</li>
+              <li class="fragment">(ii) the error handler aborts the cluster on an overly-general exception</li>
+              <li class="fragment">(iii) the error handler contains expressions like "FIXME" or "TODO" in the comments.</li>
+            </ul>
+          </q>
+
+          <div style="font-size: 1vw;"><i>- Simple Testing Can Prevent Most Critical Failures (OSDI '14)</i></div>
+        </section>
+        <section>
+					<q cite="http://ucare.cs.uchicago.edu/pdf/socc14-cbs.pdf">
+            The root causes [of data inconsistency] mainly come from logic bugs in operational protocols (43%), data races (29%) and failure handling problems (10%).
+          </q>
+
+          <div style="font-size: 1vw;"><i>- What Bugs Live in the Cloud? (SOCC '14)</i></div>
+        </section>
+        <section>
+					<h2>Understandable Architecture</h2>
+					<ul>
+            <li class="fragment">if we know desirable properties beforehand, we can build the system so we can detect problems</li>
+						<li class="fragment">we can build deterministic systems that are "single-stepped" under test, like frames in an animation</li>
+            <li class="fragment">when we have visibility and determinism, a failing test can tell a story that can be replayed</li>
+					</ul>
+        </section>
+        <section>
+					<h2>imposing determinism</h2>
+					<ul>
+            <li class="fragment">clocks can be controlled externally</li>
+            <li class="fragment">random number generators can be seeded externally</li>
+            <li class="fragment">threads can be scheduled using linux realtime priorities</li>
+            <li class="fragment">files can be wrapped with a mutation log that keeps track of syncs and can be "crashed"</li>
+            <li class="fragment">networked systems can be implemented as incoming->[outgoing]</li>
+            <li class="fragment">check out this crate: deterministic</li>
+          </ul>
+        </section>
+        <section>
+					<h2>model-based tests</h2>
+					<ol>
+            <li class="fragment">write a simplified model of a system</li>
+            <li class="fragment">generate random sequences of operations on both the implementation and the model</li>
+            <li class="fragment">if the model and implementation diverge, try to reduce the operations that caused the failure</li>
+            <li class="fragment">turn the failing sequence into a unit test (the machine just wrote a test for you!!!)</li>
+            <li class="fragment">either your model is wrong, the implementation is wrong, or both! these are all valuable</li>
+            <li class="fragment">use debug_assert! on almost every nontrivial section, this will catch so many bugs</li>
+            <li class="fragment">if your system can't be modeled, the design is probably going to be expensive to make reliable</li>
+          </ol>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            model! {
+                Model => let mut m = BTreeMap::new(),
+                Implementation => let mut i = Tree::default(),
+                Set(k: usize, v: usize) => {
+                  assert_eq!(m.insert(k, v), i.set(k, v))
+                },
+                Get(k: usize) => {
+                  assert_eq!(m.get(&k), i.get(&k))
+                }
+            }
+            ```
+            <div style="font-size: 1vw;">See the <b>model</b> crate for this macro, as well as
+              black-box concurrent datastructure linearizability testing</div>
+          </textarea>
+        </section>
+        <section>
+					<h2>fault injection</h2>
+					<ul>
+            <li class="fragment">PingCAP's <b>fail</b> crate lets you cause specific locations in code to return failures, sleep, etc...</li>
+            <li class="fragment">this can be combined with model-based testing to thoroughly exercise failure handling code</li>
+            <li class="fragment">super useful around file operations to test for IO issues!</li>
+            <li class="fragment">gotcha: make sure only one thread is running model-based tests at a time using this!</li>
+          </ul>
+        </section>
+        <section>
+					<h2>network simulation</h2>
+					<ul>
+            <li class="fragment">Jepsen has found bugs in many of the most popular distributed systems</li>
+            <li class="fragment">by running a fake network on deterministic components, we can run thousands of partition tests per second</li>
+            <li class="fragment">we can have engineers run these tests before opening pull requests in a couple seconds, catching many bugs early</li>
+          </ul>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Simulation
+
+            ```rust
+
+            // Reactor is a trait for building simulable systems.
+            pub trait Reactor: Debug + Clone {
+                type Peer: std::net::ToSocketAddrs;
+                type Message;
+
+                fn receive(
+                    &mut self,
+                    at: SystemTime,
+                    from: Self::Peer,
+                    msg: Self::Message,
+                ) -> Vec<(Self::Peer, Self::Message)>;
+            }
+            ```
+            github.com/spacejam/quickcheck-tut/caspaxos
+          </textarea>
+        </section>
+        <section>
+					<h2>lineage-driven fault injection</h2>
+					<ul>
+            <li class="fragment">randomized testing of complex systems can face extremely large search spaces</li>
+            <li class="fragment">LDFI observes what goes right without faults, then induces targeted faults starting from the last successful operation</li>
+            <li class="fragment">when applied to network simulators, this roots out bugs in distributed algorithms extremely effectively</li>
+          </ul>
+        </section>
+        <section></section>
+        <section>
+          <h2>misc tips</h2>
+					<ul>
+            <li class="fragment">try not to use unwrap() everywhere, at least use expect() to speed up debugging</li>
+            <li class="fragment"></li>
+            <li class="fragment"></li>
+            <li class="fragment"></li>
+					</ul>
+        </section>
+			</div>
+		</div>
+		<script src="js/reveal.js"></script>
+		<script src="plugin/markdown/marked.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+      Reveal.initialize({
+				transition: 'none',
+      });
+		</script>
+	</body>
+</html>
