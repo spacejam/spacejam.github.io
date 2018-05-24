@@ -10,195 +10,26 @@
           <div style="color: #F00; -webkit-text-stroke: 1px black;">
             RELIABLE INFRASTRUCTURE
           </div>
-          <aside class="notes">
-            welcome! today we'll be talking about building
-            foundational systems and libraries that meet our
-            expectations. that's what I mean when I say
-            reliability. it does what we expect. this
-            becomes a bit more important when other
-            people start to depend on our code.
-
-            rust is one of the most exciting languages today
-            because it makes systems programming accessible
-            to people who haven't spent years getting bitten
-            by memory corruption bugs.
-
-            it also lets experienced systems programmers who
-            claim to write safe code actually write safe code.
-
-            but we still have flawed assumptions about the world
-            that we turn into flawed code.
-            the world always manages to surprise us.
-
-            reliable infrastructure happens when the code
-            does what we expect, and what we expect is realistic.
-
-          </aside>
         </section>
-        <section data-markdown>
-          <textarea data-template>
-            #### we start handling errors but we don't finish
-            ```rust
-#[cfg(any(test, feature = "quickcheck"))]
-impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap<K, V> {
-    fn arbitrary<G: Gen>(g: &mut G) -> Self {
-        HashMap::from(Vec::<(K, V)>::arbitrary(g))
-    }
-}
-            ```
-          </textarea>
-        </section>
-        <section>
-          	<pre>
-#[cfg(any(test, feature = "quickcheck"))]
-impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap<K, V> {
-    fn arbitrary<G: Gen>(g: &mut G) -> Self {
-        HashMap::from(Vec::<(K, V)>::arbitrary(g))
-    }
-}
-            </pre>
+        <section data-background-image="images/eiffel-tower.jpg" data-background-size="cover">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            THE CLEAR EXPRESSION OF REALISTIC BELIEFS THROUGH CODE
+          </div>
         </section>
 				<section data-background-color="#000000">
 					<h2>Roadmap</h2>
 					<ul>
-						<li class="fragment">what we get wrong</li>
-						<li class="fragment">how messed up the world is</li>
-						<li class="fragment">how to mess up our laptops, too</li>
+						<li class="fragment">brains, code, reality</li>
+						<li class="fragment">property testing</li>
+						<li class="fragment">model-based testing</li>
+            <li class="fragment">fault injection</li>
+						<li class="fragment">network simulation</li>
+						<li class="fragment">optimizing our torture techniques</li>
+						<li class="fragment">telling stories to the damned</li>
 					</ul>
-          <aside class="notes">
-            today I'll be talking about 1. common mistakes we make,
-            2. common ways the world surprises us,
-            3. and how to run code on laptops in a way that quickly brings realistic bugs to our attention
-          </aside>
         </section>
         <section>
-          <h4>Simple Testing Can Prevent Most Critical Failures: An Analysis of Production Failures in Distributed Data-intensive Systems (OSDI '14)</h4>
-					<q cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf" class="fragment">
-            almost all (92%) of the catastrophic system failures are the result of incorrect handling of non-fatal errors explicitly signaled in software.
-          </q>
-
-          <aside class="notes">
-            in 2014 a wonderful paper came out of the university of Toronto that studied the types of bugs that typically impact data-intensive systems, like databases.
-
-            these are interesting because unlike stateless systems, bugs here often cause permanent damage to the datasets we expect them to keep safe.
-
-            one of the clearest results from this paper is that many bugs appear to have been considered, but never quite handled properly.
-          </aside>
-        </section>
-        <section data-markdown>
-          <textarea data-template>
-            #### we start handling errors but we don't finish
-            ```rust
-            if let Err(e) = do_something() {
-              error!("we detected a problem: {}", e);
-              // TODO(not me) deal with it!
-              panic!(e);
-            }
-            ```
-            Notes:
-            here's a fun quote from the paper:
-            "in 58% of the catastrophic failures, the underlying faults could easily have been detected through simple testing of error handling code."
-
-            "In fact, in 35% of the catastrophic failures, the faults in the error handling code fall into three trivial patterns:"
-              * the error handler is simply empty or only contains a log printing statement
-              * the error handler aborts the cluster on an overly-general exception
-              * the error handler contains expressions like "FIXME" or "TODO" in the comments.
-          </textarea>
-        </section>
-        <section data-background-color="#000000">
-            <h4>Summary</h4>
-            <ul>
-              <li class="fragment">we actually expect many errors that become problematic</li>
-              <li class="fragment">we often put thought into handling errors</li>
-              <li class="fragment">thoughts are not enough</li>
-            </ul>
-            <aside class="notes">
-              in summary, 1. we expect many of the errors we later encounter,
-              2. we usually put thought into errors, we consider
-              their existance, we leave helpful notes to future selves,
-              and we even panic when we know that we can't continue safely,
-              3. but then we tend not to actually handle these exepected issues.
-
-              My theory for why this is is that even when we expect a failure might happen,
-              we have no idea how to trigger it with tests.
-            </aside>
-        </section>
-        <section>
-          <h4>How messed up is the world?</h4>
-          <ul>
-            <li class="fragment">all IO can fail</li>
-            <li class="fragment">the OS is a VM</li>
-            <li class="fragment">file writes go to memory before disk</li>
-            <li class="fragment">network traffic may be lost in transit</li>
-            <li class="fragment">messages can be arbitrarily delayed</li>
-            <li class="fragment">messages can arrive out of order</li>
-          </ul>
-          <aside class="notes">
-            so, what are the issues we often know about, but have trouble testing?
-            1. all operations on files or sockets can fail, either due to permissions, hardware issues,
-            cosmic rays, full disks, queueing issues in the kernel, etc...
-            2. we often work with deep abstractions that are cumbersome to model in tests.
-            the operating system is a virtual machine. I don't mean this in any poetic
-            sense. I mean that it tells us a lot of lies that we choose to believe,
-            especially around files and sockets.
-            3. file operations are lies in that a write to a file will sit
-            in kernel memory before one of the kernel's IO threads puts it on disk.
-            it does this to batch operations, which increases throughput, but
-            we need to remember that until we call fsync it's not on disk.
-            other disks actually lie to operating systems, and put the
-            writes from the kernel on volatile memory on the disk itself,
-            and have a battery that will allow them to stay alive during a
-            power failure until the data in memory has been written to the disk.
-            some disks actually don't implement fsync at all, or have buggy implementations,
-            but we will put this issue aside for now.
-            4. network operations get really messed up, because failures that
-            happen on a computer halfway around the world can drop your traffic
-            abruptly.
-            5. routers along the path from the source to the destination can
-            have delays due to having spikes in traffic or because of
-            stalls during reconfiguration, or they can seriously misbehave due
-            to corrupted memory. A friend of mine once tracked a bug where
-            clients were getting corrupt cached data out of a memcached instance
-            down to a buggy network switch that was flipping bits on
-            packets after performing a checksum on the payload, and
-            then it would put the corrupted data into a new packed which
-            had a different, but valid, checksum. when in doubt, blame the network.
-            (not really, it's rarely the actual problem)
-            6. if two messages are sent across the network, they could
-            arrive in the opposite order that they were sent
-          </aside>
-        </section>
-        <section data-background-color="#000000">
-					<h4>Let's mess up systems, realistically! (with our laptops!!!)</h4>
-          <ul>
-            <li class="fragment">property testing basics</li>
-            <li class="fragment">model-based tests</li>
-            <li class="fragment">fail points</li>
-            <li class="fragment">network simulation</li>
-            <li class="fragment">lineage-driven fault injection</li>
-          </ul>
-          <aside class="notes">
-            This is where things get interesting! Now we're going to get into
-            some extremely powerful techniques for testing things
-            1. We're going to start with property testing, where we describe
-            properties that should hold for our code when given randomized
-            inputs.
-            2. then we'll dive into model-based tests, in which the randomized
-            input that is generated is a sequence of operations that is performed
-            against both a model and an implementation. this is probably my
-            favorite testing technique because of how many issues in my own systems
-            it reveals.
-            3. then I'll cover a great library from PingCAP that lets us
-            trigger failures or return errors from particular locations in our
-            code, which is super useful for testing whether we're handling failures
-            properly or not. I'll then show how to combine this with model-based
-            testing to break your systems like they've never been broken before.
-            4. then I'll give you a quick look at a way to build distributed systems
-            on top of a fake network, that is able to deterministically reproduce
-            errors that are found.
-            5. finally, I'll show you how to combine a simulator with the current
-            big idea in reliability: lineage-driven fault injection.
-          </aside>
+          the interplay between brains, code, and reality
         </section>
         <section>
           <h4>property testing</h4>
@@ -208,6 +39,74 @@ impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap
           <aside class="notes">
           </aside>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            proptest! {
+              #[test]
+              fn mult_and_div(ref a in i32::ANY) {
+                let result = (a * 5) / 5;
+                assert_eq!(result, a);
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section>
+          output of above
+        </section>
+        <section>
+          replay of above
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            proptest! {
+              #[test]
+              fn compress_roundtrip(ref s in ".*") {
+                let result = decompress(compress(s));
+                assert_eq!(result, s);
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            im-rs has some great examples of using proptest!
+
+            ```rust
+            #[test]
+            fn lookup(ref m in hash_map(i16::ANY, i16::ANY)) {
+                let map: HashMap<i16, i16> = m.iter().collect();
+                for (k, v) in m {
+                    assert_eq!(Some(v), map.get(k));
+                }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.rs/crates/<b>im</b>
+
+            ```rust
+            #[test]
+            fn exact_size_iterator(ref vector in vector(i32::ANY)) {
+              let mut should_be = vector.len();
+              let mut it = vector.iter();
+              loop {
+                assert_eq!(should_be, it.len());
+                match it.next() {
+                  None => break,
+                  Some(_) => should_be -= 1,
+                }
+              }
+              assert_eq!(0, it.len());
+            }
+            ```
+          </textarea>
+        </section>
         <section>
           <h4>model-based testing</h4>
 					<ol>
@@ -216,18 +115,17 @@ impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap
             <li class="fragment">if the model and implementation diverge, try to reduce the operations that caused the failure</li>
             <li class="fragment">turn the failing sequence into a unit test (the machine just wrote a test for you!!!)</li>
             <li class="fragment">either your model is wrong, the implementation is wrong, or both! these are all valuable</li>
-            <li class="fragment">use debug_assert! on almost every nontrivial section, this will catch so many bugs</li>
-            <li class="fragment">if your system can't be modeled, the design is probably going to be expensive to make reliable</li>
           </ol>
           <aside class="notes">
           </aside>
         </section>
         <section data-markdown>
           <textarea data-template>
+            crates.rs/crates/<b>model</b>
             ```rust
             model! {
                 Model => let mut m = BTreeMap::new(),
-                Implementation => let mut i = Tree::default(),
+                Implementation => let mut i = MyTree::default(),
                 Set(k: usize, v: usize) => {
                   assert_eq!(m.insert(k, v), i.set(k, v))
                 },
@@ -236,12 +134,44 @@ impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap
                 }
             }
             ```
-            <div>See the <b>model</b> crate for this macro, as well as
-              black-box concurrent datastructure linearizability testing</div>
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.rs/crates/<b>model</b>
+            ```rust
+            linearizable! {
+              Implementation => let i = AtomicUsize::new(0),
+              BuggyAdd(usize)(v in 0usize..4) => {
+                let current = i.load(Ordering::SeqCst);
+                i.store(current + v, Ordering::SeqCst);
+                current + v
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.rs/crates/<b>sparse-bitfield</b>
+            ```rust
+            proptest! {
+              #[test]
+              fn doesnt_crash(
+                bit in 0usize..1_000_000,
+                page_sz_exponent in 0usize..30
+              ) {
+                let page_sz = 1 << page_sz_exponent;
+                let mut bits = Bitfield::new(page_sz);
+                assert_eq!(bits.set(bit, true), Change::Changed);
+                assert_eq!(bits.get(bit), true);
+              }
+            }
+            ```
           </textarea>
         </section>
         <section>
-          <h4>fail points</h4>
+          <h4>fault injection</h4>
           <ol>
             <li class="fragment">use the </li>
             <li class="fragment"></li>
@@ -253,8 +183,30 @@ impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap
         </section>
         <section data-markdown>
           <textarea data-template>
+            #### we start handling errors but we don't finish
             ```rust
-            fn might_fail() -> Result<(), ()> {
+            if let Err(e) = do_something_with_io() {
+              error!("we detected a problem: {}", e);
+              // TODO(not me) deal with it!
+              panic!(e);
+            }
+            ```
+            Simple Testing Can Prevent Most Critical Failures: An Analysis of Production Failures in Distributed Data-intensive Systems (OSDI '14)
+
+            ```
+            in 58% of the catastrophic failures, the underlying faults could easily have been detected through simple testing of error handling code.
+            ...
+            In fact, in 35% of the catastrophic failures, the faults in the error handling code fall into three trivial patterns:"
+              * the error handler is simply empty or only contains a log printing statement
+              * the error handler aborts the cluster on an overly-general exception
+              * the error handler contains expressions like "FIXME" or "TODO" in the comments.
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            fn do_something_with_io() -> Result<(), ()> {
               fail_point!("might_fail", |_| Err(()));
               Ok(())
             }
@@ -264,7 +216,7 @@ impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap
               fail::setup();
               fail::cfg("might_fail", "return").unwrap();
 
-              might_fail().expect_err("should return Err");
+              do_something_with_io().expect_err("should return Err");
             }
             ```
           </textarea>
