@@ -20,7 +20,7 @@
 
             rust is one of the most exciting languages today
             because it makes systems programming accessible
-            to people who haven't spent years getting bit
+            to people who haven't spent years getting bitten
             by memory corruption bugs.
 
             it also lets experienced systems programmers who
@@ -30,13 +30,33 @@
             that we turn into flawed code.
             the world always manages to surprise us.
 
-            on top of that, when we have good ideas, we often
-            get distracted before implementing them.
-
             reliable infrastructure happens when the code
             does what we expect, and what we expect is realistic.
 
           </aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### we start handling errors but we don't finish
+            ```rust
+#[cfg(any(test, feature = "quickcheck"))]
+impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap<K, V> {
+    fn arbitrary<G: Gen>(g: &mut G) -> Self {
+        HashMap::from(Vec::<(K, V)>::arbitrary(g))
+    }
+}
+            ```
+          </textarea>
+        </section>
+        <section>
+          	<pre>
+#[cfg(any(test, feature = "quickcheck"))]
+impl<K: Hash + Eq + Arbitrary + Sync, V: Arbitrary + Sync> Arbitrary for HashMap<K, V> {
+    fn arbitrary<G: Gen>(g: &mut G) -> Self {
+        HashMap::from(Vec::<(K, V)>::arbitrary(g))
+    }
+}
+            </pre>
         </section>
 				<section data-background-color="#000000">
 					<h2>Roadmap</h2>
@@ -138,7 +158,7 @@
             have delays due to having spikes in traffic or because of
             stalls during reconfiguration, or they can seriously misbehave due
             to corrupted memory. A friend of mine once tracked a bug where
-            clients were getting corrupt data out of a memcached instance
+            clients were getting corrupt cached data out of a memcached instance
             down to a buggy network switch that was flipping bits on
             packets after performing a checksum on the payload, and
             then it would put the corrupted data into a new packed which
@@ -149,42 +169,47 @@
           </aside>
         </section>
         <section data-background-color="#000000">
-					<h4>Let's mess up our laptops!!!</h4>
-        </section>
-        <section data-markdown>
-          <textarea data-template>
-            ```rust
-            ```
-          </textarea>
-          <aside class="notes">
-          </aside>
-        </section>
-        <section>
-					<h2>observability</h2>
-					<ul>
-            <li class="fragment">tells a story</li>
-            <li class="fragment">relevant context for reproducing an issue</li>
-            <li class="fragment">production: actionable logs and over-reported metrics</li>
-            <li class="fragment">testing: seeds for RNGs, clear logs of partitions and messages</li>
-					</ul>
-          <aside class="notes">
-          </aside>
-        </section>
-        <section>
-					<h2>imposing determinism</h2>
-					<ul>
-            <li class="fragment">clocks can be controlled externally</li>
-            <li class="fragment">random number generators can be seeded externally</li>
-            <li class="fragment">threads can be scheduled using linux realtime priorities</li>
-            <li class="fragment">files can be wrapped with a mutation log that keeps track of syncs and can be "crashed"</li>
-            <li class="fragment">networked systems can be implemented as incoming->[outgoing]</li>
-            <li class="fragment">check out this crate: deterministic</li>
+					<h4>Let's mess up systems, realistically! (with our laptops!!!)</h4>
+          <ul>
+            <li class="fragment">property testing basics</li>
+            <li class="fragment">model-based tests</li>
+            <li class="fragment">fail points</li>
+            <li class="fragment">network simulation</li>
+            <li class="fragment">lineage-driven fault injection</li>
           </ul>
           <aside class="notes">
+            This is where things get interesting! Now we're going to get into
+            some extremely powerful techniques for testing things
+            1. We're going to start with property testing, where we describe
+            properties that should hold for our code when given randomized
+            inputs.
+            2. then we'll dive into model-based tests, in which the randomized
+            input that is generated is a sequence of operations that is performed
+            against both a model and an implementation. this is probably my
+            favorite testing technique because of how many issues in my own systems
+            it reveals.
+            3. then I'll cover a great library from PingCAP that lets us
+            trigger failures or return errors from particular locations in our
+            code, which is super useful for testing whether we're handling failures
+            properly or not. I'll then show how to combine this with model-based
+            testing to break your systems like they've never been broken before.
+            4. then I'll give you a quick look at a way to build distributed systems
+            on top of a fake network, that is able to deterministically reproduce
+            errors that are found.
+            5. finally, I'll show you how to combine a simulator with the current
+            big idea in reliability: lineage-driven fault injection.
           </aside>
         </section>
         <section>
-					<h2>model-based tests</h2>
+          <h4>property testing</h4>
+          <p>problem: the person who writes unit tests brings the same biases to the tests that they brought to the code</p>
+          <p></p>
+          <p></p>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h4>model-based testing</h4>
 					<ol>
             <li class="fragment">write a simplified model of a system</li>
             <li class="fragment">generate random sequences of operations on both the implementation and the model</li>
@@ -211,23 +236,41 @@
                 }
             }
             ```
-            <div style="font-size: 1vw;">See the <b>model</b> crate for this macro, as well as
+            <div>See the <b>model</b> crate for this macro, as well as
               black-box concurrent datastructure linearizability testing</div>
           </textarea>
         </section>
         <section>
-					<h2>fault injection</h2>
-					<ul>
-            <li class="fragment">PingCAP's <b>fail</b> crate lets you cause specific locations in code to return failures, sleep, etc...</li>
-            <li class="fragment">this can be combined with model-based testing to thoroughly exercise failure handling code</li>
-            <li class="fragment">super useful around file operations to test for IO issues!</li>
+          <h4>fail points</h4>
+          <ol>
+            <li class="fragment">use the </li>
+            <li class="fragment"></li>
+            <li class="fragment"></li>
             <li class="fragment">gotcha: make sure only one thread is running model-based tests at a time using this!</li>
-          </ul>
+          </ol>
           <aside class="notes">
           </aside>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            fn might_fail() -> Result<(), ()> {
+              fail_point!("might_fail", |_| Err(()));
+              Ok(())
+            }
+
+            #[test]
+            fn test() {
+              fail::setup();
+              fail::cfg("might_fail", "return").unwrap();
+
+              might_fail().expect_err("should return Err");
+            }
+            ```
+          </textarea>
+        </section>
         <section>
-					<h2>network simulation</h2>
+          <h4>network simulation</h4>
 					<ul>
             <li class="fragment">Jepsen has found bugs in many of the most popular distributed systems</li>
             <li class="fragment">by running a fake network on deterministic components, we can run thousands of partition tests per second</li>
@@ -261,7 +304,7 @@
           </aside>
         </section>
         <section>
-					<h2>lineage-driven fault injection</h2>
+          <h4>lineage-driven fault injection</h4>
 					<ul>
             <li class="fragment">randomized testing of complex systems can face extremely large search spaces</li>
             <li class="fragment">LDFI observes what goes right without faults, then induces targeted faults starting from the last successful operation</li>
@@ -270,17 +313,39 @@
           <aside class="notes">
           </aside>
         </section>
-        <section></section>
+        <section data-markdown>
+          <textarea data-template>
+            ```rust
+            ```
+          </textarea>
+        </section>
+        <section>
+					<h2>imposing determinism</h2>
+					<ul>
+            <li class="fragment">clocks can be controlled externally</li>
+            <li class="fragment">random number generators can be seeded externally</li>
+            <li class="fragment">threads can be scheduled using linux realtime priorities</li>
+            <li class="fragment">files can be wrapped with a mutation log that keeps track of syncs and can be "crashed"</li>
+            <li class="fragment">networked systems can be implemented as incoming->[outgoing]</li>
+            <li class="fragment">check out this crate: deterministic</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
         <section>
           <h2>misc tips</h2>
 					<ul>
             <li class="fragment">try not to use unwrap() everywhere, at least use expect() to speed up debugging</li>
             <li class="fragment">when propagating errors, include context that helps you get back to the root</li>
             <li class="fragment"></li>
-            <li class="fragment"></li>
 					</ul>
           <aside class="notes">
           </aside>
+        </section>
+        <section data-background-image="images/triumphofdeath.jpg" data-background-size="cover">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            THANKS
+          </div>
         </section>
 			</div>
 		</div>
