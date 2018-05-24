@@ -188,10 +188,10 @@
               Model => let mut map = BTreeMap::new(),
               Implementation => let mut tree = MyTree::new(),
               Set(k: usize, v: usize) => {
-                assert_eq!(map.insert(k, v), db.set(k, v))
+                assert_eq!(map.insert(k, v), tree.set(k, v))
               },
               Get(k: usize) => {
-                assert_eq!(map.get(&k), db.get(&k))
+                assert_eq!(map.get(&k), tree.get(&k))
               }
             }
             ```
