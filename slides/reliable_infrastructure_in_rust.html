@@ -129,19 +129,9 @@
             ```
           </textarea>
         </section>
-        <section>
-          <h4>model-based testing</h4>
-					<ol>
-            <li class="fragment">write a simplified model of a system</li>
-            <li class="fragment">apply random sequences of operations on both the implementation and the model</li>
-            <li class="fragment">if the model and implementation behave differently, it means we've found a problem</li>
-            <li class="fragment">the library will rerun the test, dropping out operations until it finds a minimal failing sequence (the machine just wrote a test for you!!!)</li>
-          </ol>
-          <aside class="notes">
-          </aside>
-        </section>
         <section data-markdown>
           <textarea data-template>
+            #### configuration is a great target
             crates.io/crates/<b>sparse-bitfield</b>
             ```rust
             proptest! {
@@ -159,20 +149,86 @@
             ```
           </textarea>
         </section>
+        <section data-background="#000">
+          But how do we apply random testing to more complex systems?
+        </section>
+        <section>
+          <h4>model-based testing</h4>
+					<ol>
+            <li class="fragment">write a simplified model of a system</li>
+            <li class="fragment">apply random sequences of operations on both the implementation and the model</li>
+            <li class="fragment">if the model and implementation behave differently, it means we've found a problem</li>
+            <li class="fragment">the library will rerun the test, dropping out operations until it finds a minimal failing sequence (the machine just wrote a test for you!!!)</li>
+          </ol>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### let's build a tree!
+            ```rust
+            pub struct Tree<K, V> {
+                root: Option<Node<K, V>>,
+            }
+
+            impl<K, V> Tree<K, V> {
+              pub fn insert(&mut self, key: K, value: V) {}
+              pub fn get(&self, key: &K) -> Option<&V> {
+                None
+              }
+            }
+            ```
+          </textarea>
+        </section>
         <section data-markdown>
           <textarea data-template>
             crates.io/crates/<b>model</b>
             ```rust
             model! {
-                Model => let mut m = BTreeMap::new(),
-                Implementation => let mut i = DB::new(),
-                Set(k: usize, v: usize) => {
-                  assert_eq!(m.insert(k, v), i.set(k, v))
-                },
-                Get(k: usize) => {
-                  assert_eq!(m.get(&k), i.get(&k))
-                }
+              Model => let mut map = BTreeMap::new(),
+              Implementation => let mut tree = MyTree::new(),
+              Set(k: usize, v: usize) => {
+                assert_eq!(map.insert(k, v), db.set(k, v))
+              },
+              Get(k: usize) => {
+                assert_eq!(map.get(&k), db.get(&k))
+              }
             }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```
+              λ cargo test
+              running 1 test
+              test test_model ... FAILED
+              Test failed: assertion failed: `(left == right)
+                left: `Some(0)`,
+                right: `None`;
+              minimal failing input: [Set((2, 0)), Get(2)]
+              test result: FAILED. 0 passed; 1 failed
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```rust
+            model! {
+              Model => let mut map = BTreeMap::new(),
+              Implementation => let mut db = DB::open("my.db"),
+              Set(k: usize, v: usize) => {
+                assert_eq!(map.insert(k, v), db.set(k, v))
+              },
+              Get(k: usize) => {
+                assert_eq!(map.get(&k), db.get(&k))
+              }
+              Restart() => {
+                drop(db);
+                db = DB::open("my.db");
+              }
             ```
           </textarea>
         </section>

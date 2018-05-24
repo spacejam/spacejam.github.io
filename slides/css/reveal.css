@@ -1553,3 +1553,8 @@ body {
 
 .zoomed .reveal .roll span:after {
   visibility: hidden; }
+
+/* tyler's stuff */
+html.dim-background .slide-background {
+    opacity: 0.2 !important;
+}
