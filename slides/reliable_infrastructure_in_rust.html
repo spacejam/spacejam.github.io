@@ -376,6 +376,29 @@
             ```
           </textarea>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### advanced technique: combine quickcheck with fail
+            crates.io/crates/<b>pagecache</b>
+            ```rust
+prop_tree_crashes_nicely(
+  vec![
+    Set,
+    Del(0),
+    FailPoint("snap write mv post"),
+    Set,
+    FailPoint("snap write"),
+    Set,
+    Set,
+    Restart,
+    FailPoint("zero segment post"),
+    Set,
+    Restart,
+  ],
+)
+            ```
+          </textarea>
+        </section>
         <section>
           <h4>to learn more about testing operations on files</h4>
           <ul>
@@ -386,12 +409,33 @@
           That's nice, but my system uses sockets to communicate.
         </section>
         <section>
-          <h4>network simulation</h4>
+          <h4>Option: Jepsen</h4>
 					<ul>
             <li class="fragment">Jepsen has found bugs in many of the most popular distributed systems</li>
-            <li class="fragment">but it requires learning clojure and it can take a long time to run</li>
-            <li class="fragment">if we design our distributed systems to be testable, we can run thousands of partition tests per second</li>
-            <li class="fragment">by making these tests cheap to run, we can catch race conditions in a second or two instead of hours or weeks</li>
+            <li class="fragment">fully black-box, nice linearizability checker</li>
+            <li class="fragment">expensive in terms of expertise and time to run</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h4>Option: TLA+</h4>
+					<ul>
+            <li class="fragment">a modeling language that can exhaustively test algorithms</li>
+            <li class="fragment">incredibly useful as a learning tool</li>
+            <li class="fragment">the TLA+ video course is amazing!</li>
+            <li class="fragment">learntla.com</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h4>option: network simulation</h4>
+					<ul>
+            <li class="fragment">build your system in a testable way</li>
+            <li class="fragment">run thousands of partition tests per second in accelerated time</li>
+            <li class="fragment">can be combined with lineage-driven fault injection</li>
+            <li class="fragment">makes building distributed systems so much easier</li>
           </ul>
           <aside class="notes">
           </aside>
@@ -484,6 +528,7 @@
         <section>
           <h2>misc tips</h2>
 					<ul>
+            <li class="fragment">isolate business logic from IO concerns</li>
             <li class="fragment">use assert! and debug_assert! on non-trivial things! this makes our "fuzzers" extremely effective</li>
             <li class="fragment">try not to use unwrap() everywhere, at least use expect("helpful message") to speed up debugging</li>
             <li class="fragment">when propagating errors, include context that helps you get back to the root</li>
