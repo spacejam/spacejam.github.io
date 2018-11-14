@@ -1,0 +1,555 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css" id="theme">
+    <script>
+    	var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section data-background-image="images/eiffel-tower.jpg" data-background-size="cover" data-state="dim-background" data-background="#f00">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            RELIABLE INFRASTRUCTURE
+          </div>
+        </section>
+        <section data-background-image="images/eiffel-tower.jpg" data-background-size="cover">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            THE CLEAR EXPRESSION OF BELIEFS THROUGH CODE
+          </div>
+        </section>
+        <section>
+          <h4>who am I?</h4>
+          <p class="fragment">distributed systems, databases, infrastructure</p>
+          <p class="fragment">sled: database construction and testing kit</p>
+          <p class="fragment">I hack on Open Source Coin, aiming to better fund and empower free software</p>
+          <p class="fragment">you might know me as spacejam</p>
+        </section>
+				<section data-background-color="#000000">
+					<h2>Roadmap</h2>
+					<ul>
+						<li class="fragment">brains, code, reality</li>
+						<li class="fragment">fuzzing our assumptions</li>
+            <li class="fragment">chaos on the net</li>
+						<li class="fragment">cool tips, advanced topics</li>
+					</ul>
+        </section>
+				<section data-background-color="#000000">
+					<h2>Non-Roadmap (covered well elsewhere)</h2>
+					<ul>
+            <li class="fragment">metrics and introspection</li>
+						<li class="fragment">capacity planning</li>
+            <li class="fragment">Brendan Gregg: Systems Performance: Enterprise and Cloud</li>
+						<li class="fragment">Google: Site Reliability Engineering</li>
+						<li class="fragment">Martin Kleppmann: Designing Data-Intensive Applications</li>
+					</ul>
+        </section>
+        <section>
+          <h4>this is your brain</h4>
+          <p class="fragment">everything we know is subject to bias</p>
+          <p class="fragment">everything we build reflects these biases</p>
+          <p class="fragment">we tend not to ask our beliefs to "pay rent"</p>
+          <p class="fragment">we don't do cache invalidation</p>
+          <p class="fragment">see "Rationality: From AI to Zombies", this is all about confronting assumptions</p>
+        </section>
+        <section>
+          <p>problem: our code reflects our biases, our tests are often biased similarly</p>
+          <p><span class="fragment">solution: don't write tests.</span> <span class="fragment">write expectations.</span></p>
+          <p class="fragment">have the machine generate random test cases</p>
+          <p class="fragment">make beliefs explicit, force them to pay rent</p>
+          <h4 class="fragment">property testing</h4>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### crate: <b>proptest</b>
+
+            ```rust
+            // this property is false, but perhaps
+            // not unreasonable to expect to be true
+            proptest! {
+              #[test]
+              fn mult_and_div(ref a in any::<usize>()) {
+                let result = (a * 5) / 5;
+                assert_eq!(result, a);
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### crate: <b>proptest</b>
+            ```
+              $ cargo test
+              test mult_and_div ... FAILED
+              Test failed: attempt to multiply with overflow;
+              minimal failing input: ref a = 3689348814741910324
+              test result: FAILED. 0 passed; 1 failed
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>proptest</b>
+
+            ```
+            $ cat proptest-regressions/main.txt
+            # Seeds for failure cases proptest has
+            # generated. It is automatically read
+            # and these particular cases re-run before
+            # any novel cases are generated.
+
+            # shrinks to ref a = 3689348814741910324
+            xs 4050946508 1278147119 4151624343 875310407
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            wonderful for testing codecs, serialization,
+            compression, or any set of operations that
+            should retain equality.
+
+            ```rust
+            proptest! {
+              #[test]
+              fn compress_roundtrip(ref s in ".*") {
+                let result = decompress(compress(s));
+                assert_eq!(result, s);
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            it's easy to generate more structured input, too
+
+            ```rust
+            proptest! {
+              #[test]
+              fn parses_all_valid_dates(
+                ref s in "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+              ) {
+                parse_date(s).unwrap();
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            im-rs has some great examples of using proptest!
+
+            ```rust
+            #[test]
+            fn exact_size_iterator(ref vector in vector(i32::ANY)) {
+              let mut should_be = vector.len();
+              let mut it = vector.iter();
+              loop {
+                assert_eq!(should_be, it.len());
+                match it.next() {
+                  None => break,
+                  Some(_) => should_be -= 1,
+                }
+              }
+              assert_eq!(0, it.len());
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### configuration is a great target
+            crates.io/crates/<b>sparse-bitfield</b>
+            ```rust
+            proptest! {
+              #[test]
+              fn doesnt_crash(
+                bit in 0usize..1_000_000,
+                page_sz_exponent in 0usize..30
+              ) {
+                let page_sz = 1 << page_sz_exponent;
+                let mut bits = Bitfield::new(page_sz);
+                assert_eq!(bits.set(bit, true), Change::Changed);
+                assert_eq!(bits.get(bit), true);
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-background="#000">
+          But how do we apply random testing to more complex systems?
+        </section>
+        <section>
+          <h4>model-based testing</h4>
+					<ol>
+            <li class="fragment">write a simplified model of a system</li>
+            <li class="fragment">apply random sequences of operations on both the implementation and the model</li>
+            <li class="fragment">if the model and implementation behave differently, it means we've found a problem</li>
+            <li class="fragment">the library will rerun the test, dropping out operations until it finds a minimal failing sequence (the machine just wrote a regression test for you!!!)</li>
+          </ol>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### let's build a tree!
+            ```rust
+            pub struct Tree<K, V> {
+                root: Option<Node<K, V>>,
+            }
+
+            impl<K, V> Tree<K, V> {
+              pub fn insert(&mut self, key: K, value: V) {}
+              pub fn get(&self, key: &K) -> Option<&V> {
+                None
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```rust
+            model! {
+              Model          => let mut map  = BTreeMap::new(),
+              Implementation => let mut tree = MyTree::new(),
+              Set(k: usize::ANY, v: 0usize..10) => {
+                map.insert(k, v);
+                tree.set(k, v);
+              },
+              Get(k: usize::ANY) => {
+                assert_eq!(map.get(&k), tree.get(&k))
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```
+              $ cargo test
+              running 1 test
+              test test_model ... FAILED
+              Test failed: assertion failed: `(left == right)
+                left: `Some(0)`,
+                right: `None`;
+              minimal failing input: [Set((2, 0)), Get(2)]
+              test result: FAILED. 0 passed; 1 failed
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```rust
+            model! {
+              Model =>          let mut map = BTreeMap::new(),
+              Implementation => let mut db  = DB::open("my.db"),
+              Set(k: usize, v: usize) => {
+                assert_eq!(map.insert(k, v), db.set(k, v))
+              },
+              Get(k: usize) => {
+                assert_eq!(map.get(&k), db.get(&k))
+              },
+              Restart() => {
+                drop(db);
+                db = DB::open("my.db");
+              }
+            ```
+          </textarea>
+        </section>
+        <section data-background="#000">
+          <h4>Bonus: Linearizability!!!</h4>
+          <p class="fragment">operations "happen" at one time after they start</p>
+          <p class="fragment">operations "happen" at one time before they end</p>
+          <p class="fragment">can be tested by looking for a single order of operations that results in the same return values</p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>model</b>
+            ```rust
+            linearizable! {
+              Implementation => let i = AtomicUsize::new(0),
+              BuggyAdd(usize)(v in 0usize..4) -> usize {
+                let current = i.load(Ordering::SeqCst);
+                i.store(current + v, Ordering::SeqCst);
+                current + v
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section>
+          <h4>to learn more about model-based testing</h4>
+          <ul>
+            <li>Experiences with QuickCheck: Testing the Hard Stuff and Staying Sane</li>
+            <li>Finding Race Conditions in Erlang with QuickCheck and PULSE</li>
+          </ul>
+        </section>
+        <section data-background="#000">
+          But what about things that do IO?
+        </section>
+        <section>
+          <h4>fault injection</h4>
+          <p class="fragment">problem: chaos_of(world) > chaos_of(laptop)</p>
+          <p class="fragment">solution: make failures happen intentionally!</p>
+        </section>
+        <section>
+          <h4>quick aside: focus</h4>
+					<blockquote cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf">
+            almost all (92%) of the catastrophic system failures
+            are the result of incorrect handling of non-fatal
+            errors explicitly signaled in software. ...
+          </blockquote>
+          Simple Testing Can Prevent Most Critical Failures: An Analysis of Production Failures in Distributed Data-intensive Systems (OSDI '14)
+        </section>
+        <section>
+          <h4>quick aside: focus</h4>
+					<blockquote cite="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf">
+            in 58% of the catastrophic failures, the underlying
+            faults could easily have been detected through simple
+            testing of error handling code.
+          </blockquote>
+          Simple Testing Can Prevent Most Critical Failures: An Analysis of Production Failures in Distributed Data-intensive Systems (OSDI '14)
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### we should trigger errors that we code for
+
+            ```rust
+            if let Err(e) = do_something_with_io() {
+              error!("we detected a problem: {}", e);
+              // TODO(not me) deal with it!
+              panic!(e);
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            crates.io/crates/<b>fail</b>
+            ```rust
+            fn do_something_with_io() -> Result<(), ()> {
+              fail_point!("might_fail", |_| Err(()));
+              Ok(())
+            }
+
+            #[test]
+            fn test() {
+              fail::setup();
+              fail::cfg("might_fail", "return").unwrap();
+
+              do_something_with_io().expect_err("should return Err");
+            }
+            ```
+
+            gotcha: make sure only one thread is running failpoint tests at a time using this!
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### advanced technique: combine quickcheck with fail
+            crates.io/crates/<b>pagecache</b>
+            ```rust
+            impl Arbitrary for Op {
+              fn arbitrary<G: Gen>(g: &mut G) -> Op {
+                let fail_points = vec![
+                    "zero garbage segment",
+                    "buffer write",
+                    "write_config crc",
+                    "trailer write",
+                    "snap write mv",
+                ];
+
+                Op::FailPoint(*g.choose(&fail_points).unwrap())
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### advanced technique: combine quickcheck with fail
+            crates.io/crates/<b>pagecache</b>
+            ```rust
+prop_tree_crashes_nicely(
+  vec![
+    Set,
+    Del(0),
+    FailPoint("snap write mv post"),
+    Set,
+    FailPoint("snap write"),
+    Set,
+    Set,
+    Restart,
+    FailPoint("zero segment post"),
+    Set,
+    Restart,
+  ],
+)
+            ```
+          </textarea>
+        </section>
+        <section>
+          <h4>to learn more about testing operations on files</h4>
+          <ul>
+            <li>All File Systems Are Not Created Equal: On the Complexity of Crafting Crash-Consistent Applications (OSDI '14)</li>
+          </ul>
+        </section>
+        <section data-background="#000">
+          That's nice, but my system uses sockets to communicate.
+        </section>
+        <section>
+          <h4>Option: Jepsen</h4>
+					<ul>
+            <li class="fragment">Jepsen has found bugs in many of the most popular distributed systems</li>
+            <li class="fragment">fully black-box, nice linearizability checker</li>
+            <li class="fragment">expensive in terms of expertise and time to run</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h4>Option: TLA+</h4>
+					<ul>
+            <li class="fragment">a modeling language that can exhaustively test algorithms</li>
+            <li class="fragment">incredibly useful as a learning tool</li>
+            <li class="fragment">the TLA+ video course is amazing!</li>
+            <li class="fragment">learntla.com</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h4>option: network simulation</h4>
+					<ul>
+            <li class="fragment">build your system in a testable way</li>
+            <li class="fragment">run thousands of partition tests per second in accelerated time</li>
+            <li class="fragment">can be combined with lineage-driven fault injection</li>
+            <li class="fragment">makes building distributed systems so much easier</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### Simulation
+
+            crates.io/crates/<b>paxos</b>
+            ```rust
+
+            // Reactor is a trait for building simulable systems.
+            pub trait Reactor: Debug + Clone {
+                type Peer: std::net::ToSocketAddrs;
+                type Message;
+
+                fn receive(
+                    &mut self,
+                    at: SystemTime,
+                    from: Self::Peer,
+                    msg: Self::Message,
+                ) -> Vec<(Self::Peer, Self::Message)>;
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### Simulation
+
+            crates.io/crates/<b>paxos</b>
+
+            ```rust
+            #[derive(Debug, Clone)]
+            struct Cluster {
+              peers: HashMap<Addr, ReactorNode>,
+              partitions: Vec<Partition>,
+              in_flight: BinaryHeap<ScheduledMessage>,
+              client_responses: Vec<ScheduledMessage>,
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            #### Simulation
+
+            crates.io/crates/<b>paxos</b>
+            ```rust
+            // impl Cluster
+            fn step(&mut self) {
+              let pop = self.in_flight.pop();
+              if let Some((at, dest, from, m_in)) = pop {
+                for (to, m_out) in dest.receive(now, from, m_in) {
+                  let at = generate_latency();
+                  if self.is_partitioned(at, &*to, dest) {
+                    continue; // it's partitioned, don't send
+                  }
+                  self.in_flight.push(at, dest, m_out);
+                }
+              }
+            }
+            ```
+          </textarea>
+        </section>
+        <section data-background="#000">
+          Simulation sounds nice in practice, but my system
+          is way too complex to run into bugs very frequently...
+        </section>
+        <section>
+          <h4>lineage-driven fault injection</h4>
+					<ul>
+            <li class="fragment">LDFI observes what goes right without faults, then induces targeted faults starting from the last successful operation, working backwards</li>
+            <li class="fragment">"Fault-tolerance is redundancy in space and time" - Peter Alvaro</li>
+            <li class="fragment">quite feasible with a simulator-friendly system!</li>
+            <li class="fragment">crate incoming!</li>
+          </ul>
+        </section>
+        <section>
+					<h2>anti-nondeterminism</h2>
+					<ul>
+            <li class="fragment">clocks, random number generators, thread scheduling are common sources of nondeterminism</li>
+            <li class="fragment">threads can be scheduled using linux realtime priorities</li>
+            <li class="fragment">files can be wrapped with a mutation log that keeps track of syncs and can be "crashed"</li>
+            <li class="fragment">crate: deterministic</li>
+          </ul>
+          <aside class="notes">
+          </aside>
+        </section>
+        <section>
+          <h2>misc tips</h2>
+					<ul>
+            <li class="fragment">isolate business logic from IO concerns</li>
+            <li class="fragment">use assert! and debug_assert! on non-trivial things! this makes our "fuzzers" extremely effective</li>
+            <li class="fragment">try not to use unwrap() everywhere, at least use expect("helpful message") to speed up debugging</li>
+            <li class="fragment">when propagating errors, include context that helps you get back to the root</li>
+					</ul>
+        </section>
+        <section data-background-image="images/triumphofdeath2.jpg" data-background-size="cover">
+          <div style="color: #F00; -webkit-text-stroke: 1px black;">
+            GO BREAK SYSTEMS
+          </div>
+        </section>
+			</div>
+		</div>
+		<script src="js/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/marked.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+      Reveal.initialize({
+				transition: 'none',
+      });
+		</script>
+	</body>
+</html>
