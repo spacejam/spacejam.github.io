@@ -38,6 +38,26 @@
       </div>
 
       <div class="container">
+        <h2>talks</h2>
+
+        <h3><a href="https://archive.fosdem.org/2020/schedule/event/rust_techniques_sled/">
+          FOSDEM 20: sled and rio - modern database engineering with io_uring
+        </a></h3>
+        <p>
+          sled is an embedded database that takes advantage of modern lock-free indexing and flash-friendly storage. rio is a pure-rust io_uring library unlocking the linux kernel's new asynchronous IO interface. This short talk will cover techniques that have been used to take advantage of modern hardware and kernels while optimizing for long term developer happiness in a complex, correctness-critical Rust codebase.
+        </p>
+
+        <h3><a href="https://www.youtube.com/watch?v=hMJEPWcSD8w">
+          RustFest Paris 2018: Building Reliable Infrastructure in Rust
+        </a></h3>
+        <p>
+          The wild success of testing tools like Jepsen is a wake-up call that we’re approaching systems engineering from a fundamentally bug-prone perspective. Why don’t we find these devastating bugs on our laptops before opening pull requests? Rust’s compiler gives us wonderful guarantees about memory safety, but as soon as we open files or sockets, all hell seems to break loose.
+
+          This talk will show you how to apply techniques from the distributed systems and database worlds in a way that maximizes the number of bugs found per cpu cycle, and reduce the amount of bias that we hardcode into our tests.
+        </p>
+      </div>
+
+      <div class="container">
         <h2>writing</h2>
 
         <h3><a href="https://sled.rs/perf">
@@ -89,26 +109,6 @@
           A brief article I wrote describing some of the work that went into etcd-mesos.
         </p>
       </div>
-
-      <div class="container">
-        <h2>talks</h2>
-
-        <h3><a href="https://archive.fosdem.org/2020/schedule/event/rust_techniques_sled/">
-          FOSDEM 20: sled and rio - modern database engineering with io_uring
-        </a></h3>
-        <p>
-          sled is an embedded database that takes advantage of modern lock-free indexing and flash-friendly storage. rio is a pure-rust io_uring library unlocking the linux kernel's new asynchronous IO interface. This short talk will cover techniques that have been used to take advantage of modern hardware and kernels while optimizing for long term developer happiness in a complex, correctness-critical Rust codebase.
-        </p>
-
-        <h3><a href="https://www.youtube.com/watch?v=hMJEPWcSD8w">
-          RustFest Paris 2018: Building Reliable Infrastructure in Rust
-        </a></h3>
-        <p>
-          The wild success of testing tools like Jepsen is a wake-up call that we’re approaching systems engineering from a fundamentally bug-prone perspective. Why don’t we find these devastating bugs on our laptops before opening pull requests? Rust’s compiler gives us wonderful guarantees about memory safety, but as soon as we open files or sockets, all hell seems to break loose.
-
-          This talk will show you how to apply techniques from the distributed systems and database worlds in a way that maximizes the number of bugs found per cpu cycle, and reduce the amount of bias that we hardcode into our tests.
-        </p>
-    </div>
 
       <div class="container">
         <h2>projects</h2>
