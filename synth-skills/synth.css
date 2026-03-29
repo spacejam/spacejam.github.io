@@ -1,0 +1,415 @@
+/* ─── Synth App Shell ────────────────────────────────────────────────────── */
+.synth-app {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0e0f11;
+  margin: 2rem 0;
+  overflow: hidden;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: #c8cdd6;
+}
+
+/* ─── Toolbar ────────────────────────────────────────────────────────────── */
+.synth-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #1e2128;
+  background: #12141a;
+}
+
+.synth-toolbar-title {
+  font-size: 0.75rem;
+  color: #5a6070;
+  flex: 1;
+  letter-spacing: 0.04em;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 0.375rem;
+  margin-left: auto;
+}
+
+.btn-icon {
+  background: #1a1d24;
+  border: 1px solid #2a2e38;
+  color: #8890a0;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-icon:hover { color: #c8cdd6; border-color: #444; }
+
+.btn-sm {
+  background: #1a1d24;
+  border: 1px solid #2a2e38;
+  color: #8890a0;
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.btn-sm:hover { color: #c8cdd6; border-color: #555; }
+
+.btn-play { color: #c8cdd6; border-color: #3a3e48; }
+.btn-play.playing { color: #ff7c6f; border-color: #ff7c6f; }
+
+/* ─── Canvas ─────────────────────────────────────────────────────────────── */
+.synth-canvas {
+  position: relative;
+  height: 260px;
+  background: #0c0d10;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ─── Module Card ────────────────────────────────────────────────────────── */
+.module-card {
+  position: absolute;
+  background: #161820;
+  border: 1px solid #2a2e3a;
+  border-radius: 6px;
+  width: 148px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  user-select: none;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid #2a2e3a;
+  background: #1c1f2a;
+  border-radius: 5px 5px 0 0;
+  cursor: grab;
+}
+
+.module-header:active { cursor: grabbing; }
+
+.module-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #7080a0;
+  font-weight: 600;
+}
+
+.module-remove {
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.module-remove:hover { color: #ff7c6f; }
+
+.module-params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  justify-content: center;
+}
+
+/* ─── Knob ───────────────────────────────────────────────────────────────── */
+.knob-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.knob-label {
+  font-size: 0.55rem;
+  color: #5a6070;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── Select param ───────────────────────────────────────────────────────── */
+.param-select-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  width: 100%;
+}
+
+.param-label {
+  font-size: 0.55rem;
+  color: #5a6070;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.param-select {
+  background: #0e0f11;
+  border: 1px solid #2a2e38;
+  color: #8890a0;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.25rem;
+  border-radius: 3px;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ─── Ports ──────────────────────────────────────────────────────────────── */
+.module-ports {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.375rem 0.5rem;
+  border-top: 1px solid #2a2e3a;
+}
+
+.module-inputs, .module-outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.port {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: crosshair;
+}
+
+.port::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: #0c0d10;
+  flex-shrink: 0;
+  transition: border-color 0.1s, background 0.1s;
+}
+
+.port:hover::before { border-color: #c8cdd6; }
+
+.port-audio::before { border-color: #4a5060; }
+.port-cv::before    { border-color: #7060a0; }
+
+.port-output { flex-direction: row-reverse; cursor: grab; }
+.port-output:active { cursor: grabbing; }
+.port-output::before { background: #1a1d24; }
+
+.port-label {
+  font-size: 0.55rem;
+  color: #4a5060;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ─── Module browser ─────────────────────────────────────────────────────── */
+.module-browser {
+  border-bottom: 1px solid #1e2128;
+  background: #12141a;
+  padding: 0.75rem 1rem;
+}
+
+.browser-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.browser-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #5a6070;
+  flex: 1;
+}
+
+.browser-close {
+  background: none;
+  border: none;
+  color: #5a6070;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.browser-close:hover { color: #c8cdd6; }
+
+.browser-category { margin-bottom: 0.5rem; }
+
+.browser-category-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4a5060;
+  margin-bottom: 0.25rem;
+}
+
+.browser-items { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+
+.browser-item {
+  background: #1a1d24;
+  border: 1px solid #2a2e38;
+  color: #8890a0;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.browser-item:hover { color: #c8cdd6; border-color: #555; }
+
+/* ─── Sequencer shared labels ────────────────────────────────────────────── */
+.seq-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #5a6070;
+}
+
+.seq-bpm {
+  font-size: 0.65rem;
+  color: #7080a0;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Piano Roll ─────────────────────────────────────────────────────────── */
+.piano-roll-section {
+  border-top: 1px solid #1e2128;
+  background: #0c0d10;
+}
+
+.piano-roll-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid #1a1b20;
+  background: #0e0f12;
+}
+
+.piano-roll-body {
+  display: flex;
+  height: 196px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Piano keyboard column */
+.piano-keys {
+  width: 30px;
+  flex-shrink: 0;
+  background: #0e0f12;
+  border-right: 1px solid #2a2e3a;
+  overflow: hidden;
+}
+
+.piano-key-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  overflow: hidden;
+}
+
+.key-white {
+  background: #1a1c24;
+}
+
+.key-black {
+  background: #0c0d10;
+}
+
+.key-c {
+  border-top: 1px solid #3a3e48;
+}
+
+.key-label {
+  font-size: 0.42rem;
+  color: #4a5060;
+  padding-left: 2px;
+  white-space: nowrap;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+}
+
+/* Grid scroll container */
+.piano-roll-grid-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+}
+
+/* Grid inner (absolute-positioned elements) */
+.piano-roll-grid {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.grid-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.grid-row-white {
+  background: #131520;
+}
+
+.grid-row-black {
+  background: #0e0f12;
+}
+
+.grid-octave-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #2a2e3a;
+  z-index: 1;
+}
+
+.grid-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid #1a1b20;
+  z-index: 2;
+}
+
+.grid-col-beat {
+  border-right-color: #2a2e3a;
+}
+
+.grid-col-active {
+  background: rgba(74, 122, 170, 0.18);
+}
+
+.piano-roll-note {
+  position: absolute;
+  background: #4a9ae0;
+  border-radius: 2px;
+  border-left: 2px solid #7ac4ff;
+  z-index: 3;
+}
